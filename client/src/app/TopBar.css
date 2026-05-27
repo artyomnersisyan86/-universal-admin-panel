@@ -1,0 +1,34 @@
+.topbar {
+  grid-area: topbar;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-5);
+  background-color: var(--bg-elev);
+  border-bottom: 1px solid var(--border);
+  z-index: 5;
+}
+
+.topbar__brand {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.topbar__lang {
+  background-color: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.topbar__user {
+  color: var(--fg-muted);
+}

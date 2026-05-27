@@ -1,0 +1,17 @@
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.form-group__fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  border: none;
+  padding: 0;
+}
+
+.form-group__fieldset:disabled {
+  opacity: 0.7;
+}

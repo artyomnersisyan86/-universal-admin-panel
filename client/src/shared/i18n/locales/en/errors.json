@@ -1,0 +1,12 @@
+{
+  "required": "Required field",
+  "tooShort": "Too short",
+  "tooLong": "Too long",
+  "invalidEmail": "Invalid email",
+  "invalidJson": "Invalid JSON",
+  "network": "Network error",
+  "unauthorized": "Unauthorized",
+  "forbidden": "Forbidden",
+  "notFound": "Not found",
+  "serverError": "Server error"
+}

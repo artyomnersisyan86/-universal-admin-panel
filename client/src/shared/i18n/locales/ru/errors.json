@@ -1,0 +1,12 @@
+{
+  "required": "Обязательное поле",
+  "tooShort": "Слишком короткое значение",
+  "tooLong": "Слишком длинное значение",
+  "invalidEmail": "Неверный формат email",
+  "invalidJson": "Неверный JSON",
+  "network": "Ошибка сети",
+  "unauthorized": "Нет авторизации",
+  "forbidden": "Запрещено",
+  "notFound": "Не найдено",
+  "serverError": "Ошибка сервера"
+}

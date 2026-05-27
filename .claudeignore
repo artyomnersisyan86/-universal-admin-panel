@@ -1,0 +1,26 @@
+node_modules/
+dist/
+build/
+.next/
+.turbo/
+.git/
+*.log
+.env
+.env.local
+.env.*.local
+uploads/
+docker/volumes/
+
+# this project
+server/data/
+server/uploads/
+*.sqlite
+*.sqlite-journal
+coverage/
+
+# IDE
+.vscode/
+.idea/
+
+# broken folder (U+2024 instead of real dot) — tooling can't read it
+․claude/

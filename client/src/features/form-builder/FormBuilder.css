@@ -1,0 +1,39 @@
+.form-builder {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.form-builder__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.form-builder__actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.form-builder__workspace {
+  display: grid;
+  grid-template-columns: 220px 1fr 300px;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.form-builder__preview {
+  max-width: 640px;
+  padding: var(--space-4);
+  background-color: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+@media (max-width: 1024px) {
+  .form-builder__workspace {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,49 @@
+/* Fluid type scale via clamp(min, preferred, max) */
+.t-h1 {
+  font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+  line-height: var(--line-height-tight);
+  font-weight: 700;
+}
+
+.t-h2 {
+  font-size: clamp(1.5rem, 1.1rem + 1.5vw, 2.25rem);
+  line-height: var(--line-height-tight);
+  font-weight: 700;
+}
+
+.t-h3 {
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  line-height: var(--line-height-tight);
+  font-weight: 600;
+}
+
+.t-h4 {
+  font-size: clamp(1.125rem, 0.95rem + 0.7vw, 1.5rem);
+  line-height: var(--line-height-tight);
+  font-weight: 600;
+}
+
+.t-h5 {
+  font-size: clamp(1rem, 0.9rem + 0.5vw, 1.25rem);
+  line-height: var(--line-height-tight);
+  font-weight: 600;
+}
+
+.t-h6 {
+  font-size: clamp(0.9375rem, 0.85rem + 0.3vw, 1.125rem);
+  line-height: var(--line-height-tight);
+  font-weight: 600;
+}
+
+.t-body {
+  font-size: clamp(0.9375rem, 0.875rem + 0.2vw, 1rem);
+  line-height: var(--line-height-base);
+  font-weight: 400;
+}
+
+.t-caption {
+  font-size: clamp(0.75rem, 0.7rem + 0.15vw, 0.8125rem);
+  line-height: var(--line-height-base);
+  font-weight: 400;
+  color: var(--fg-muted);
+}

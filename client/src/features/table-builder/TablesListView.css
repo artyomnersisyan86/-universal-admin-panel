@@ -1,0 +1,124 @@
+.tables-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.tables-list__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.tables-list__intro {
+  margin: 4px 0 0;
+  color: var(--fg-muted);
+  font-size: 14px;
+  max-width: 560px;
+  line-height: 1.5;
+}
+
+.tables-list__create {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-elev);
+  max-width: 480px;
+}
+
+.tables-list__create-hint {
+  color: var(--fg-muted);
+  font-size: 13px;
+}
+
+.tables-list__error {
+  color: var(--danger, #c0392b);
+  font-size: 13px;
+  margin: 0;
+}
+
+.tables-list__empty {
+  color: var(--fg-muted);
+  padding: var(--space-4);
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+}
+
+.tables-list__empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-4);
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-elev);
+}
+
+.tables-list__empty-icon {
+  font-size: 48px;
+  line-height: 1;
+}
+
+.tables-list__empty-desc {
+  margin: 0;
+  max-width: 440px;
+  color: var(--fg-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.tables-list__items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.tables-list__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background-color: var(--bg);
+}
+
+.tables-list__item-open {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  background: none;
+  border: none;
+  color: var(--fg);
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+}
+
+.tables-list__item-open:hover .tables-list__item-name {
+  text-decoration: underline;
+}
+
+.tables-list__item-name {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.tables-list__item-meta {
+  font-size: 12px;
+  color: var(--fg-muted);
+}

@@ -1,0 +1,28 @@
+.admin-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  grid-template-rows: 56px 1fr;
+  grid-template-areas:
+    'topbar topbar'
+    'sidebar main';
+  min-height: 100vh;
+  background-color: var(--bg);
+}
+
+.admin-layout__main {
+  grid-area: main;
+  padding: var(--space-5);
+  overflow-y: auto;
+  background-color: var(--bg);
+}
+
+@media (max-width: 768px) {
+  .admin-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: 56px auto 1fr;
+    grid-template-areas:
+      'topbar'
+      'sidebar'
+      'main';
+  }
+}

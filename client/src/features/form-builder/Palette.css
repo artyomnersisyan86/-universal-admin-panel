@@ -1,0 +1,38 @@
+.palette {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background-color: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  height: fit-content;
+  min-width: 200px;
+}
+
+.palette__items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.palette__card {
+  padding: 10px 12px;
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: grab;
+  font-size: 14px;
+  user-select: none;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.palette__card:hover {
+  border-color: var(--color-primary);
+  background-color: var(--bg-elev-2);
+}
+
+.palette__card--dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}

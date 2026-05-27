@@ -1,0 +1,12 @@
+{
+  "required": "Պարտադիր դաշտ",
+  "tooShort": "Շատ կարճ է",
+  "tooLong": "Շատ երկար է",
+  "invalidEmail": "Սխալ էլ. փոստի ձևաչափ",
+  "invalidJson": "Սխալ JSON",
+  "network": "Ցանցի սխալ",
+  "unauthorized": "Չլիազորված",
+  "forbidden": "Արգելված",
+  "notFound": "Չի գտնվել",
+  "serverError": "Սերվերի սխալ"
+}

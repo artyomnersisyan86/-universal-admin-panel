@@ -1,0 +1,50 @@
+.image-upload {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+}
+
+.image-upload__preview {
+  width: 160px;
+  height: 160px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-elev);
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+}
+
+.image-upload__preview:hover {
+  border-color: var(--color-primary);
+}
+
+.image-upload__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-upload__placeholder {
+  font-size: 32px;
+  color: var(--fg-muted);
+}
+
+.image-upload__actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.image-upload__error {
+  color: var(--color-error);
+  font-size: 12px;
+}
+
+.image-upload--disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}

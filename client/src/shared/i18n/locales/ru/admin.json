@@ -1,0 +1,104 @@
+{
+  "nav": {
+    "dashboard": "Дашборд",
+    "formBuilder": "Конструктор форм",
+    "tables": "Таблицы",
+    "apiBuilder": "Конструктор API",
+    "settings": "Настройки"
+  },
+  "formBuilder": {
+    "palette": "Элементы",
+    "canvas": "Холст",
+    "properties": "Свойства",
+    "preview": "Превью",
+    "field": {
+      "text": "Текст",
+      "select": "Список",
+      "richtext": "Rich text",
+      "image": "Изображение",
+      "file": "Файл",
+      "button": "Кнопка"
+    },
+    "props": {
+      "label": "Подпись",
+      "name": "Имя",
+      "placeholder": "Placeholder",
+      "required": "Обязательное",
+      "multilingual": "Многоязычное",
+      "options": "Опции"
+    }
+  },
+  "table": {
+    "addRow": "Добавить строку",
+    "perColumnSearch": "Поиск по колонке",
+    "columnVisibility": "Видимые колонки",
+    "rowsPerPage": "Строк на странице",
+    "noData": "Нет данных"
+  },
+  "tables": {
+    "newTable": "Новая таблица",
+    "tableName": "Название таблицы",
+    "tableNamePlaceholder": "напр. News, Products, Articles",
+    "createHint": "Создаётся с двумя колонками (title, published). Изменить схему можно через «Редактировать схему».",
+    "intro": "Таблица — это раздел сайта (Новости, Товары, Команда…). У каждой таблицы есть колонки (поля) и строки (записи).",
+    "emptyTitle": "Таблиц пока нет",
+    "emptyDescription": "Таблицы — это разделы вашего сайта: новости, товары, сотрудники — что угодно. Создайте первую, чтобы начать.",
+    "emptyCta": "Создать первую таблицу",
+    "itemMeta": "{{count}} колонок · обновлено {{date}}",
+    "errorCreate": "Не удалось создать таблицу",
+    "confirmDeleteTable": "Удалить эту таблицу и все её строки?",
+    "confirmDeleteRow": "Удалить эту строку?",
+    "backToList": "К списку таблиц",
+    "notFound": "Таблица не найдена",
+    "editSchema": "Редактировать схему",
+    "addRowTitle": "Добавить строку",
+    "editRowTitle": "Редактировать строку",
+    "editorTip": "<b>Редактировать схему</b> — настройка колонок (полей). <b>+ Добавить строку</b> — добавление записи.",
+    "rowsEmptyTitle": "Записей пока нет",
+    "rowsEmptyDescription": "Добавьте первую запись — заголовок, контент, картинку и т.д. в зависимости от ваших колонок.",
+    "rowsEmptyCta": "Добавить первую строку",
+    "rowFormMultilingualHint": "Многоязычные поля показывают вкладки <b>hy / ru / en</b> — заполняйте каждый язык отдельно."
+  },
+  "columnEditor": {
+    "title": "Редактирование схемы таблицы",
+    "intro": "Опишите поля для каждой записи. <b>Ключ</b> — технический id для API (a–z, 0–9, _); <b>Подпись</b> видят редакторы; <b>Тип</b> определяет ввод (текст, число, изображение и т.д.).",
+    "tableName": "Название таблицы",
+    "addColumn": "Добавить колонку",
+    "noColumns": "Колонок нет. Добавьте первую.",
+    "key": "Ключ (технический id)",
+    "keyPlaceholder": "напр. author_name",
+    "label": "Подпись",
+    "labelPlaceholder": "напр. Имя автора",
+    "type": "Тип",
+    "multilingual": "Многоязычное",
+    "multilingualHint": "Хранит варианты hy/ru/en",
+    "searchable": "Доступно поиску",
+    "searchableHint": "Участвует в поиске по колонкам",
+    "hidden": "Скрыто",
+    "hiddenHint": "Сохраняется, но не отображается в таблице",
+    "save": "Сохранить схему",
+    "cancel": "Отмена",
+    "errorEmptyName": "Название таблицы обязательно",
+    "errorBadKey": "Неверный ключ «{{key}}» — буквы, цифры и подчёркивание, первый символ — буква",
+    "errorDupKey": "Дубль ключа «{{key}}»",
+    "errorEmptyLabel": "Подпись для «{{key}}» обязательна",
+    "errorSave": "Не удалось сохранить схему",
+    "types": {
+      "text": "Текст",
+      "number": "Число",
+      "boolean": "Булево",
+      "image": "Изображение",
+      "richtext": "Rich text"
+    }
+  },
+  "apiBuilder": {
+    "createEndpoint": "Создать endpoint",
+    "method": "Метод",
+    "path": "Путь",
+    "mode": "Режим",
+    "modeStatic": "Статический JSON",
+    "modeDb": "Запрос к БД",
+    "responseTemplate": "Шаблон ответа (JSON)",
+    "enabled": "Включён"
+  }
+}

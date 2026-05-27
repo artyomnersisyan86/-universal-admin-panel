@@ -1,0 +1,23 @@
+.file-upload {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.file-upload__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.file-upload__name {
+  font-size: 13px;
+  color: var(--fg-muted);
+  word-break: break-all;
+}
+
+.file-upload__error {
+  color: var(--color-error);
+  font-size: 12px;
+}

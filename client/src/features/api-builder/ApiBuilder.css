@@ -1,0 +1,117 @@
+.api-builder {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.api-builder__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background-color: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.api-builder__row {
+  display: grid;
+  grid-template-columns: 140px 1fr 200px;
+  gap: var(--space-3);
+}
+
+@media (max-width: 768px) {
+  .api-builder__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.api-builder__json {
+  width: 100%;
+  padding: var(--space-3);
+  font-family: var(--font-family-mono);
+  font-size: 13px;
+  background-color: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  resize: vertical;
+}
+
+.api-builder__check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.api-builder__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.api-builder__items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.api-builder__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 8px 12px;
+  background-color: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.api-builder__method {
+  font-weight: 700;
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  color: var(--fg-on-primary);
+  min-width: 60px;
+  text-align: center;
+}
+
+.api-builder__method--get {
+  background-color: var(--color-success);
+}
+.api-builder__method--post {
+  background-color: var(--color-primary);
+}
+.api-builder__method--patch {
+  background-color: var(--color-warning);
+}
+.api-builder__method--delete {
+  background-color: var(--color-error);
+}
+
+.api-builder__mode {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  background-color: var(--bg);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.api-builder__disabled {
+  font-size: 11px;
+  color: var(--color-error);
+}
+
+.api-builder__item code {
+  flex: 1;
+  font-family: var(--font-family-mono);
+  font-size: 13px;
+}

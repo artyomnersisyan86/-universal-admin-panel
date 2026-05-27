@@ -1,0 +1,104 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "formBuilder": "Form Builder",
+    "tables": "Tables",
+    "apiBuilder": "API Builder",
+    "settings": "Settings"
+  },
+  "formBuilder": {
+    "palette": "Fields",
+    "canvas": "Canvas",
+    "properties": "Properties",
+    "preview": "Preview",
+    "field": {
+      "text": "Text",
+      "select": "Select",
+      "richtext": "Rich text",
+      "image": "Image",
+      "file": "File",
+      "button": "Button"
+    },
+    "props": {
+      "label": "Label",
+      "name": "Name",
+      "placeholder": "Placeholder",
+      "required": "Required",
+      "multilingual": "Multilingual",
+      "options": "Options"
+    }
+  },
+  "table": {
+    "addRow": "Add row",
+    "perColumnSearch": "Per-column search",
+    "columnVisibility": "Column visibility",
+    "rowsPerPage": "Rows per page",
+    "noData": "No data"
+  },
+  "tables": {
+    "newTable": "New table",
+    "tableName": "Table name",
+    "tableNamePlaceholder": "e.g. News, Products, Articles",
+    "createHint": "Starts with two columns (title, published). Use \"Edit schema\" later to customise.",
+    "intro": "A Table is a section of your site (News, Products, Team…). Each table has columns (fields) and rows (records).",
+    "emptyTitle": "No tables yet",
+    "emptyDescription": "Tables are the sections your site shows: News, Products, Team members — anything. Create your first one to get started.",
+    "emptyCta": "Create your first table",
+    "itemMeta": "{{count}} columns · updated {{date}}",
+    "errorCreate": "Failed to create table",
+    "confirmDeleteTable": "Delete this table and all its rows?",
+    "confirmDeleteRow": "Delete this row?",
+    "backToList": "Back to tables",
+    "notFound": "Table not found",
+    "editSchema": "Edit schema",
+    "addRowTitle": "Add row",
+    "editRowTitle": "Edit row",
+    "editorTip": "<b>Edit schema</b> sets up columns (fields). <b>+ Add row</b> adds a record.",
+    "rowsEmptyTitle": "No rows yet",
+    "rowsEmptyDescription": "Add the first record — title, content, image and so on, based on your columns.",
+    "rowsEmptyCta": "Add your first row",
+    "rowFormMultilingualHint": "Multilingual fields show <b>hy / ru / en</b> tabs — fill each language separately."
+  },
+  "columnEditor": {
+    "title": "Edit table schema",
+    "intro": "Define fields for each record. <b>Key</b> is a technical id used by the API (a–z, 0–9, _); <b>Label</b> is what editors see; <b>Type</b> picks the input (text, number, image, etc.).",
+    "tableName": "Table name",
+    "addColumn": "Add column",
+    "noColumns": "No columns. Add the first one.",
+    "key": "Key (technical id)",
+    "keyPlaceholder": "e.g. author_name",
+    "label": "Label",
+    "labelPlaceholder": "e.g. Author name",
+    "type": "Type",
+    "multilingual": "Multilingual",
+    "multilingualHint": "Stores hy/ru/en variants",
+    "searchable": "Searchable",
+    "searchableHint": "Used by per-column search",
+    "hidden": "Hidden",
+    "hiddenHint": "Stored but not shown in the table",
+    "save": "Save schema",
+    "cancel": "Cancel",
+    "errorEmptyName": "Table name is required",
+    "errorBadKey": "Bad key \"{{key}}\" — use letters, digits and underscore, starting with a letter",
+    "errorDupKey": "Duplicate key \"{{key}}\"",
+    "errorEmptyLabel": "Label for \"{{key}}\" is required",
+    "errorSave": "Failed to save schema",
+    "types": {
+      "text": "Text",
+      "number": "Number",
+      "boolean": "Boolean",
+      "image": "Image",
+      "richtext": "Rich text"
+    }
+  },
+  "apiBuilder": {
+    "createEndpoint": "Create endpoint",
+    "method": "Method",
+    "path": "Path",
+    "mode": "Mode",
+    "modeStatic": "Static JSON",
+    "modeDb": "Database query",
+    "responseTemplate": "Response template (JSON)",
+    "enabled": "Enabled"
+  }
+}
