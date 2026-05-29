@@ -1,14 +1,5 @@
-import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
-
-export type Theme = 'light' | 'dark';
-
-interface ThemeContextValue {
-  theme: Theme;
-  setTheme: (t: Theme) => void;
-  toggleTheme: () => void;
-}
-
-export const ThemeContext = createContext<ThemeContextValue | null>(null);
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ThemeContext, type Theme } from './ThemeContext';
 
 const STORAGE_KEY = 'uap.theme';
 
