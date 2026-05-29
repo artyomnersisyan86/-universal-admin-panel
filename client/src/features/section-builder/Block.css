@@ -54,7 +54,11 @@
 }
 
 .sb-block__body {
-  padding: var(--space-3);
+  padding: var(--sb-pad, var(--space-3));
+  background-color: var(--sb-bg, transparent);
+  color: var(--sb-fg, inherit);
+  border: var(--sb-border-width, 0) solid var(--sb-border-color, transparent);
+  border-radius: var(--sb-radius, 0);
 }
 
 .sb-typography__placeholder {

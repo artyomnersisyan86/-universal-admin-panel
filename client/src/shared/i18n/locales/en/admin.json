@@ -52,6 +52,21 @@
       "multilingual": "Multilingual",
       "fieldType": "Field type"
     },
+    "section": {
+      "content": "Content",
+      "style": "Style"
+    },
+    "style": {
+      "background": "Background",
+      "textColor": "Text color",
+      "padding": "Padding",
+      "margin": "Margin",
+      "borderColor": "Border color",
+      "borderWidth": "Border width",
+      "borderRadius": "Corner radius",
+      "none": "None",
+      "custom": "Custom"
+    },
     "container": {
       "empty": "Drop blocks here to nest them",
       "dropHere": "Drop here to add to the end"

@@ -52,6 +52,21 @@
       "multilingual": "Многоязычное",
       "fieldType": "Тип поля"
     },
+    "section": {
+      "content": "Содержимое",
+      "style": "Стиль"
+    },
+    "style": {
+      "background": "Фон",
+      "textColor": "Цвет текста",
+      "padding": "Внутренний отступ",
+      "margin": "Внешний отступ",
+      "borderColor": "Цвет рамки",
+      "borderWidth": "Толщина рамки",
+      "borderRadius": "Скругление углов",
+      "none": "Нет",
+      "custom": "Свой"
+    },
     "container": {
       "empty": "Перетащите блоки сюда, чтобы вложить",
       "dropHere": "Перетащите сюда, чтобы добавить в конец"

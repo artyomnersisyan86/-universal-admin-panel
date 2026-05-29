@@ -24,6 +24,51 @@
   cursor: pointer;
 }
 
+/* Sections group related controls; <details> sections collapse. */
+.property-panel__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.property-panel__section:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+
+.property-panel__section-title {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75em;
+  color: var(--fg-muted);
+  cursor: default;
+}
+
+/* When the title is a <summary>, make it a clickable collapse toggle. */
+summary.property-panel__section-title {
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: var(--space-3);
+}
+
+details.property-panel__section[open] > summary.property-panel__section-title {
+  margin-bottom: 0;
+}
+
+/* Two controls side by side (e.g. padding / margin). */
+.property-panel__row {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.property-panel__row > * {
+  flex: 1;
+  min-width: 0;
+}
+
 .property-panel__textarea {
   width: 100%;
   min-height: 120px;

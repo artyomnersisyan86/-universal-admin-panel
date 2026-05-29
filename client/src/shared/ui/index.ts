@@ -2,6 +2,7 @@ export * from './Typography';
 export * from './Button';
 export * from './TextInput';
 export * from './Select';
+export * from './ColorPicker';
 export * from './RichTextEditor';
 export * from './ImageUpload';
 export * from './FileUpload';
