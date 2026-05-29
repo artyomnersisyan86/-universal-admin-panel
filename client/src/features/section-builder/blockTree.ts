@@ -152,6 +152,48 @@ export function insertIntoContainer(
   });
 }
 
+export interface DropTarget {
+  parentId: string | null;
+  index: number;
+}
+
+/**
+ * Resolve a drag-and-drop `over` target into a parent (`null` = root) and an
+ * insert index.
+ *
+ * - the canvas droppable → end of root
+ * - a container's droppable slot (`<prefix><id>`) → end of that container
+ * - a container block itself → nest at the end of it (so dropping an existing
+ *   block anywhere on a container nests it, since dnd-kit resolves `over` to
+ *   the container's sortable rather than its inner slot)
+ * - any other block → that block's position (insert before it)
+ *
+ * Returns `null` when the target can't be resolved (the drop is ignored).
+ */
+export function resolveDropTarget(
+  root: BlockNode[],
+  overId: string,
+  activeId: string,
+  opts: { canvasId: string; containerPrefix: string },
+): DropTarget | null {
+  if (overId === opts.canvasId) {
+    return { parentId: null, index: root.length };
+  }
+  if (overId.startsWith(opts.containerPrefix)) {
+    const containerId = overId.slice(opts.containerPrefix.length);
+    const node = findById(root, containerId);
+    const len = node && node.type === 'container' ? node.children.length : 0;
+    return { parentId: containerId, index: len };
+  }
+  const overNode = findById(root, overId);
+  if (overNode?.type === 'container' && overId !== activeId) {
+    return { parentId: overId, index: overNode.children.length };
+  }
+  const loc = findParent(root, overId);
+  if (!loc) return null;
+  return { parentId: loc.parentId, index: loc.index };
+}
+
 /**
  * Move an existing node to a new parent (or the root) at a given index.
  * `toParentId = null` targets the root array. Guards against moving a

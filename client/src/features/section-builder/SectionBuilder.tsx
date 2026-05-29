@@ -16,7 +16,7 @@ import { Canvas, CANVAS_DROPPABLE_ID } from './Canvas';
 import { CONTAINER_DROPPABLE_PREFIX } from './BlockRenderers/ContainerBlock';
 import { PropertyPanel } from './PropertyPanel';
 import { useBlockTree } from './useBlockTree';
-import { findById, findParent, makeBlock, normalizeLayout } from './blockTree';
+import { makeBlock, normalizeLayout, resolveDropTarget } from './blockTree';
 import './SectionBuilder.css';
 
 interface SectionBuilderProps {
@@ -69,34 +69,14 @@ export function SectionBuilder({ section }: SectionBuilderProps) {
 
   const selected = selectedId ? tree.findNode(selectedId) : null;
 
-  /**
-   * Resolve a drop target into a parent (`null` = root) and an insert index.
-   *
-   * - canvas droppable → end of root
-   * - container droppable slot → end of that container
-   * - over another block → that block's position (insert before it / take its slot)
-   */
-  function resolveTarget(overId: string): { parentId: string | null; index: number } | null {
-    if (overId === CANVAS_DROPPABLE_ID) {
-      return { parentId: null, index: tree.layout.root.length };
-    }
-    if (overId.startsWith(CONTAINER_DROPPABLE_PREFIX)) {
-      const containerId = overId.slice(CONTAINER_DROPPABLE_PREFIX.length);
-      const node = findById(tree.layout.root, containerId);
-      const len = node && node.type === 'container' ? node.children.length : 0;
-      return { parentId: containerId, index: len };
-    }
-    const loc = findParent(tree.layout.root, overId);
-    if (!loc) return null;
-    return { parentId: loc.parentId, index: loc.index };
-  }
-
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     if (!over) return;
 
-    const overId = String(over.id);
-    const target = resolveTarget(overId);
+    const target = resolveDropTarget(tree.layout.root, String(over.id), String(active.id), {
+      canvasId: CANVAS_DROPPABLE_ID,
+      containerPrefix: CONTAINER_DROPPABLE_PREFIX,
+    });
     if (!target) return;
 
     const data = active.data.current as ActiveData | undefined;

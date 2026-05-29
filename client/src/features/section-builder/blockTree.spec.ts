@@ -15,10 +15,13 @@ import {
   moveById,
   normalizeLayout,
   removeById,
+  resolveDropTarget,
   toMultilingual,
   toPlainText,
   updateById,
 } from './blockTree';
+
+const DROP_OPTS = { canvasId: 'sb-canvas', containerPrefix: 'sb-droppable:' };
 
 function typography(id: string, text = 'X'): TypographyBlock {
   return {
@@ -266,6 +269,57 @@ describe('blockTree', () => {
       const box = container('box', []);
       const before = [a, box];
       expect(moveAcrossParents(before, 'missing', 'box', 0)).toBe(before);
+    });
+  });
+
+  describe('resolveDropTarget', () => {
+    const box = container('box', [typography('c1'), typography('c2')]);
+    const root = [typography('a'), box, typography('b')];
+
+    it('targets the end of root when over the canvas', () => {
+      expect(resolveDropTarget(root, 'sb-canvas', 'x', DROP_OPTS)).toEqual({
+        parentId: null,
+        index: 3,
+      });
+    });
+
+    it('targets the end of a container when over its droppable slot', () => {
+      expect(resolveDropTarget(root, 'sb-droppable:box', 'x', DROP_OPTS)).toEqual({
+        parentId: 'box',
+        index: 2,
+      });
+    });
+
+    it('nests into a container when dropped on the container block itself', () => {
+      expect(resolveDropTarget(root, 'box', 'a', DROP_OPTS)).toEqual({
+        parentId: 'box',
+        index: 2,
+      });
+    });
+
+    it('does not nest a container into itself — falls back to reorder', () => {
+      expect(resolveDropTarget(root, 'box', 'box', DROP_OPTS)).toEqual({
+        parentId: null,
+        index: 1,
+      });
+    });
+
+    it('targets a sibling position when over a non-container block', () => {
+      expect(resolveDropTarget(root, 'b', 'a', DROP_OPTS)).toEqual({
+        parentId: null,
+        index: 2,
+      });
+    });
+
+    it('resolves a nested block to its container position', () => {
+      expect(resolveDropTarget(root, 'c2', 'a', DROP_OPTS)).toEqual({
+        parentId: 'box',
+        index: 1,
+      });
+    });
+
+    it('returns null for an unknown target', () => {
+      expect(resolveDropTarget(root, 'ghost', 'a', DROP_OPTS)).toBeNull();
     });
   });
 
