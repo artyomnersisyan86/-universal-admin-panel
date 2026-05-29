@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import type { BlockStyle, FieldWidth, FlexLayout } from '@shared/types';
+import type { BlockNode, Breakpoint, BlockStyle, FieldWidth, FlexLayout } from '@shared/types';
 
 /**
  * Map a block's visual style to `--sb-*` custom properties consumed by
@@ -46,3 +46,54 @@ export function containerLayoutVars(layout?: FlexLayout): CSSProperties {
   if (layout?.alignItems) vars['--sb-align'] = layout.alignItems;
   return vars as CSSProperties;
 }
+
+/**
+ * Resolve block style cascade (desktop -> tablet -> mobile).
+ */
+export function getResolvedStyle(block: BlockNode, bp: Breakpoint): BlockStyle {
+  const base = block.props.style ?? {};
+  if (bp === 'desktop') return base;
+
+  const tablet = block.props.responsive?.tablet?.style ?? {};
+  if (bp === 'tablet') {
+    return { ...base, ...tablet };
+  }
+
+  const mobile = block.props.responsive?.mobile?.style ?? {};
+  return { ...base, ...tablet, ...mobile };
+}
+
+/**
+ * Resolve container layout cascade (desktop -> tablet -> mobile).
+ */
+export function getResolvedLayout(block: BlockNode, bp: Breakpoint): FlexLayout | undefined {
+  if (block.type !== 'container') return undefined;
+  const base = block.props.layout ?? {};
+  if (bp === 'desktop') return base;
+
+  const tablet = block.props.responsive?.tablet?.layout ?? {};
+  if (bp === 'tablet') {
+    return { ...base, ...tablet };
+  }
+
+  const mobile = block.props.responsive?.mobile?.layout ?? {};
+  return { ...base, ...tablet, ...mobile };
+}
+
+/**
+ * Resolve block width cascade (desktop -> tablet -> mobile).
+ */
+export function getResolvedWidth(block: BlockNode, bp: Breakpoint): FieldWidth | undefined {
+  if (block.type === 'slider') return undefined;
+  const base = ('width' in block.props ? block.props.width : undefined) || 'auto';
+  if (bp === 'desktop') return base;
+
+  const tablet = block.props.responsive?.tablet?.width;
+  if (bp === 'tablet') {
+    return tablet ?? base;
+  }
+
+  const mobile = block.props.responsive?.mobile?.width;
+  return mobile ?? tablet ?? base;
+}
+

@@ -17,6 +17,8 @@ import { CONTAINER_DROPPABLE_PREFIX } from './BlockRenderers/ContainerBlock';
 import { PropertyPanel } from './PropertyPanel';
 import { useBlockTree } from './useBlockTree';
 import { makeBlock, normalizeLayout, resolveDropTarget } from './blockTree';
+import { BreakpointProvider } from './useBreakpoint';
+import { PreviewToggle } from './PreviewToggle';
 import './SectionBuilder.css';
 
 interface SectionBuilderProps {
@@ -115,45 +117,48 @@ export function SectionBuilder({ section }: SectionBuilderProps) {
   }
 
   return (
-    <div className="section-builder">
-      <header className="section-builder__header">
-        <div>
-          <Typography variant="h2">
-            {section.name.hy || section.name.en || section.slug}
-          </Typography>
-          <Typography variant="caption" className="section-builder__slug">
-            <code>/api/{section.slug}</code>
-          </Typography>
-        </div>
-        <div className="section-builder__actions">
-          {savedAt && (
-            <Typography variant="caption" className="section-builder__saved">
-              {t('admin:sectionBuilder.savedAt', { time: savedAt.toLocaleTimeString() })}
+    <BreakpointProvider>
+      <div className="section-builder">
+        <header className="section-builder__header">
+          <div>
+            <Typography variant="h2">
+              {section.name.hy || section.name.en || section.slug}
             </Typography>
-          )}
-          {saveError && (
-            <Typography variant="caption" className="section-builder__error">
-              ⚠ {saveError}
+            <Typography variant="caption" className="section-builder__slug">
+              <code>/api/{section.slug}</code>
             </Typography>
-          )}
-          <Button onClick={handleSave} loading={updateMutation.isPending}>
-            {t('admin:sectionBuilder.save')}
-          </Button>
-        </div>
-      </header>
+          </div>
+          <div className="section-builder__actions">
+            <PreviewToggle />
+            {savedAt && (
+              <Typography variant="caption" className="section-builder__saved">
+                {t('admin:sectionBuilder.savedAt', { time: savedAt.toLocaleTimeString() })}
+              </Typography>
+            )}
+            {saveError && (
+              <Typography variant="caption" className="section-builder__error">
+                ⚠ {saveError}
+              </Typography>
+            )}
+            <Button onClick={handleSave} loading={updateMutation.isPending}>
+              {t('admin:sectionBuilder.save')}
+            </Button>
+          </div>
+        </header>
 
-      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-        <div className="section-builder__workspace">
-          <Palette />
-          <Canvas
-            blocks={tree.layout.root}
-            selectedId={selectedId}
-            onSelect={setSelectedId}
-            onRemove={removeBlock}
-          />
-          <PropertyPanel block={selected} onPatch={tree.update} />
-        </div>
-      </DndContext>
-    </div>
+        <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+          <div className="section-builder__workspace">
+            <Palette />
+            <Canvas
+              blocks={tree.layout.root}
+              selectedId={selectedId}
+              onSelect={setSelectedId}
+              onRemove={removeBlock}
+            />
+            <PropertyPanel block={selected} onPatch={tree.update} />
+          </div>
+        </DndContext>
+      </div>
+    </BreakpointProvider>
   );
 }

@@ -7,7 +7,8 @@ import { TypographyBlockView } from './BlockRenderers/TypographyBlock';
 import { FieldBlockView } from './BlockRenderers/FieldBlock';
 import { ContainerBlockView } from './BlockRenderers/ContainerBlock';
 import { SliderBlockView } from './BlockRenderers/SliderBlock';
-import { bodyStyleVars, widthToCss } from './blockStyle';
+import { bodyStyleVars, widthToCss, getResolvedStyle, getResolvedWidth } from './blockStyle';
+import { useBreakpoint } from './useBreakpoint';
 import './Block.css';
 
 export interface BlockHandlers {
@@ -22,17 +23,18 @@ interface BlockProps extends BlockHandlers {
 
 export function Block({ block, selectedId, onSelect, onRemove }: BlockProps) {
   const selected = block.id === selectedId;
+  const { breakpoint } = useBreakpoint();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
     data: { source: 'block', blockId: block.id },
   });
 
-  const blockStyle = block.props.style;
-  const width = 'width' in block.props ? block.props.width : undefined;
+  const resolvedStyle = getResolvedStyle(block, breakpoint);
+  const width = getResolvedWidth(block, breakpoint);
   const style: CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
-    ...(blockStyle?.margin ? { margin: blockStyle.margin } : {}),
+    ...(resolvedStyle?.margin ? { margin: resolvedStyle.margin } : {}),
     ...widthToCss(width),
   };
 
@@ -76,7 +78,7 @@ export function Block({ block, selectedId, onSelect, onRemove }: BlockProps) {
           ×
         </Button>
       </div>
-      <div className="sb-block__body" style={bodyStyleVars(blockStyle)}>
+      <div className="sb-block__body" style={bodyStyleVars(resolvedStyle)}>
         <BlockBody
           block={block}
           selectedId={selectedId}

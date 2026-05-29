@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { bodyStyleVars, widthToCss, containerLayoutVars } from './blockStyle';
+import type { ContainerBlock } from '@shared/types';
+import {
+  bodyStyleVars,
+  widthToCss,
+  containerLayoutVars,
+  getResolvedStyle,
+  getResolvedLayout,
+  getResolvedWidth,
+} from './blockStyle';
 
 describe('bodyStyleVars', () => {
   it('returns an empty object for no style', () => {
@@ -69,3 +77,108 @@ describe('containerLayoutVars', () => {
     });
   });
 });
+
+describe('cascade style/layout/width resolution', () => {
+  const dummyBlock = (props: ContainerBlock['props']): ContainerBlock => ({
+    id: 'block-1',
+    type: 'container',
+    props,
+    children: [],
+  });
+
+  describe('getResolvedStyle', () => {
+    it('returns base style for desktop', () => {
+      const b = dummyBlock({
+        style: { backgroundColor: '#fff' },
+        responsive: {
+          tablet: { style: { backgroundColor: '#000' } },
+        },
+      });
+      expect(getResolvedStyle(b, 'desktop')).toEqual({ backgroundColor: '#fff' });
+    });
+
+    it('returns merged base + tablet style for tablet', () => {
+      const b = dummyBlock({
+        style: { backgroundColor: '#fff', textColor: '#222' },
+        responsive: {
+          tablet: { style: { backgroundColor: '#000' } },
+        },
+      });
+      expect(getResolvedStyle(b, 'tablet')).toEqual({
+        backgroundColor: '#000',
+        textColor: '#222',
+      });
+    });
+
+    it('returns merged base + tablet + mobile style for mobile', () => {
+      const b = dummyBlock({
+        style: { backgroundColor: '#fff', textColor: '#222', padding: '10px' },
+        responsive: {
+          tablet: { style: { backgroundColor: '#000', padding: '20px' } },
+          mobile: { style: { padding: '5px' } },
+        },
+      });
+      expect(getResolvedStyle(b, 'mobile')).toEqual({
+        backgroundColor: '#000',
+        textColor: '#222',
+        padding: '5px',
+      });
+    });
+  });
+
+  describe('getResolvedLayout', () => {
+    it('returns base layout for desktop', () => {
+      const b = dummyBlock({
+        layout: { direction: 'row' },
+        responsive: {
+          tablet: { layout: { direction: 'column' } },
+        },
+      });
+      expect(getResolvedLayout(b, 'desktop')).toEqual({ direction: 'row' });
+    });
+
+    it('returns tablet override for tablet', () => {
+      const b = dummyBlock({
+        layout: { direction: 'row', gap: '10px' },
+        responsive: {
+          tablet: { layout: { direction: 'column' } },
+        },
+      });
+      expect(getResolvedLayout(b, 'tablet')).toEqual({
+        direction: 'column',
+        gap: '10px',
+      });
+    });
+  });
+
+  describe('getResolvedWidth', () => {
+    it('returns width for desktop', () => {
+      const b = dummyBlock({
+        width: '50%',
+        responsive: {
+          tablet: { width: '100%' },
+        },
+      });
+      expect(getResolvedWidth(b, 'desktop')).toEqual('50%');
+    });
+
+    it('returns tablet fallback for mobile when mobile is empty', () => {
+      const b = dummyBlock({
+        width: '50%',
+        responsive: {
+          tablet: { width: '100%' },
+        },
+      });
+      expect(getResolvedWidth(b, 'mobile')).toEqual('100%');
+    });
+
+    it('returns base fallback for mobile when both tablet and mobile are empty', () => {
+      const b = dummyBlock({
+        width: '50%',
+        responsive: {},
+      });
+      expect(getResolvedWidth(b, 'mobile')).toEqual('50%');
+    });
+  });
+});
+

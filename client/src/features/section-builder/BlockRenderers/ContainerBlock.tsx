@@ -8,7 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { Typography } from '@shared/ui/Typography';
 import type { ContainerBlock } from '@shared/types';
 import { Block, type BlockHandlers } from '../Block';
-import { containerLayoutVars } from '../blockStyle';
+import { containerLayoutVars, getResolvedLayout } from '../blockStyle';
+import { useBreakpoint } from '../useBreakpoint';
 import './ContainerBlock.css';
 
 /** Droppable id for the empty slot inside a container, e.g. `sb-droppable:<uuid>`. */
@@ -20,7 +21,8 @@ interface Props extends BlockHandlers {
 
 export function ContainerBlockView({ block, selectedId, onSelect, onRemove }: Props) {
   const { t } = useTranslation('admin');
-  const layout = block.props.layout ?? {};
+  const { breakpoint } = useBreakpoint();
+  const layout = getResolvedLayout(block, breakpoint) ?? {};
   const isRow = layout.direction === 'row';
 
   const dropId = `${CONTAINER_DROPPABLE_PREFIX}${block.id}`;

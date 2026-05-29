@@ -40,6 +40,11 @@
     "savedAt": "Saved at {{time}}",
     "emptyCanvas": "Drag a block from the palette here",
     "selectHint": "Select a block to edit",
+    "preview": {
+      "desktop": "Desktop",
+      "tablet": "Tablet",
+      "mobile": "Mobile"
+    },
     "block": {
       "typography": "Text / heading",
       "field": "Form field",
@@ -81,7 +86,16 @@
     },
     "slider": {
       "preview": "Slider block",
-      "stageHint": "Slide editor lands in Stage 3"
+      "stageHint": "Configure slides in the properties panel",
+      "addSlide": "Add slide",
+      "noSlides": "No slides yet. Click \"Add slide\" to create one.",
+      "slideTitle": "Slide Title",
+      "slideText": "Slide Description / Text",
+      "buttonLabel": "Button Label",
+      "buttonUrl": "Button URL",
+      "imageDesktop": "Desktop Image (required)",
+      "imageMobile": "Mobile Image (optional)",
+      "activeSlideSettings": "Slide #{{index}} Settings"
     }
   },
   "formBuilder": {

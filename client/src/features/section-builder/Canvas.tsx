@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Typography } from '@shared/ui/Typography';
 import type { BlockNode } from '@shared/types';
 import { Block } from './Block';
+import { useBreakpoint } from './useBreakpoint';
 import './Canvas.css';
 
 interface CanvasProps {
@@ -20,6 +21,7 @@ export const CANVAS_DROPPABLE_ID = 'sb-canvas';
 
 export function Canvas({ blocks, selectedId, onSelect, onRemove }: CanvasProps) {
   const { t } = useTranslation('admin');
+  const { breakpoint } = useBreakpoint();
   const { setNodeRef, isOver } = useDroppable({
     id: CANVAS_DROPPABLE_ID,
     data: { source: 'canvas' },
@@ -34,6 +36,7 @@ export function Canvas({ blocks, selectedId, onSelect, onRemove }: CanvasProps) 
           'sb-canvas__drop',
           isOver && 'sb-canvas__drop--over',
           blocks.length === 0 && 'sb-canvas__drop--empty',
+          breakpoint !== 'desktop' && `sb-preview--${breakpoint}`,
         ]
           .filter(Boolean)
           .join(' ')}

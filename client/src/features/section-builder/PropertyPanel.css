@@ -11,6 +11,41 @@
   top: var(--space-3);
 }
 
+.property-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--space-2);
+}
+
+.property-panel__badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background-color: var(--bg-elev-3);
+  border: 1px solid var(--border);
+}
+
+.property-panel__badge--desktop {
+  color: var(--color-primary);
+  border-color: var(--color-primary-muted, var(--color-primary));
+}
+
+.property-panel__badge--tablet {
+  color: var(--color-success, #10b981);
+  border-color: var(--color-success-muted, #10b981);
+}
+
+.property-panel__badge--mobile {
+  color: #a855f7; /* Purple */
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
 .property-panel__form {
   display: flex;
   flex-direction: column;

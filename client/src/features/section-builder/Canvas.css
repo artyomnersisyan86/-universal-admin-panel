@@ -13,7 +13,9 @@
   background-color: var(--bg-elev);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+  transition: all var(--transition-normal) ease-in-out;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .sb-canvas__drop--empty {
@@ -28,3 +30,19 @@
   border-color: var(--color-primary);
   background-color: var(--bg-elev-2);
 }
+
+/* Device simulation styling */
+.sb-canvas__drop.sb-preview--tablet {
+  max-width: 768px;
+  margin-inline: auto;
+  border-color: var(--color-primary-muted, var(--border-strong));
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.sb-canvas__drop.sb-preview--mobile {
+  max-width: 375px;
+  margin-inline: auto;
+  border-color: var(--color-primary-muted, var(--border-strong));
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+

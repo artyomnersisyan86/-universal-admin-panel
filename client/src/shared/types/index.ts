@@ -177,17 +177,23 @@ export type FieldWidth = '100%' | '50%' | '33%' | 'auto';
 export type Breakpoint = 'desktop' | 'tablet' | 'mobile';
 
 /**
- * Per-breakpoint overrides. `desktop` is the base (stored on the block props
- * directly), so only `tablet` and `mobile` carry overrides here. Any subset of
- * style/layout/width may be overridden.
+ * Overrides for one breakpoint. Mirrors the base block props (`style`,
+ * `layout`, `width`) so the same editors can target any breakpoint. Any subset
+ * may be set; unset fields fall back to the next-wider breakpoint, then base.
  */
-export type BreakpointOverride = Partial<BlockStyle & FlexLayout> & {
+export interface BreakpointStyle {
+  style?: BlockStyle;
+  layout?: FlexLayout;
   width?: FieldWidth;
-};
+}
 
+/**
+ * Per-breakpoint overrides. `desktop` is the base (stored on the block props
+ * directly), so only `tablet` and `mobile` carry overrides here.
+ */
 export interface ResponsiveOverrides {
-  tablet?: BreakpointOverride;
-  mobile?: BreakpointOverride;
+  tablet?: BreakpointStyle;
+  mobile?: BreakpointStyle;
 }
 
 export interface TypographyBlock {

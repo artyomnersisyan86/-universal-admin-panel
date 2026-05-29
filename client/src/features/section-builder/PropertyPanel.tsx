@@ -1,11 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@shared/ui/Typography';
 import { FieldShell } from '@shared/ui/_FieldShell';
-import type { BlockNode, BlockStyle, FieldWidth, FlexLayout } from '@shared/types';
+import type { BlockNode } from '@shared/types';
 import { TypographyProps } from './propertyPanels/TypographyProps';
 import { FieldProps } from './propertyPanels/FieldProps';
 import { StyleProps } from './propertyPanels/StyleProps';
 import { LayoutProps, WidthSelect } from './propertyPanels/LayoutProps';
+import { SliderProps } from './propertyPanels/SliderProps';
+import { useBreakpoint } from './useBreakpoint';
+import { getScope, setScopeStyle, setScopeLayout, setScopeWidth } from './responsiveScope';
 import './PropertyPanel.css';
 
 interface PropertyPanelProps {
@@ -15,10 +18,18 @@ interface PropertyPanelProps {
 
 export function PropertyPanel({ block, onPatch }: PropertyPanelProps) {
   const { t } = useTranslation('admin');
+  const { breakpoint } = useBreakpoint();
 
   return (
     <aside className="property-panel">
-      <Typography variant="h5">{t('sectionBuilder.properties')}</Typography>
+      <div className="property-panel__header">
+        <Typography variant="h5">{t('sectionBuilder.properties')}</Typography>
+        {block && (
+          <span className={`property-panel__badge property-panel__badge--${breakpoint}`}>
+            {t(`sectionBuilder.preview.${breakpoint}`)}
+          </span>
+        )}
+      </div>
       {!block ? (
         <Typography variant="caption">{t('sectionBuilder.selectHint')}</Typography>
       ) : (
@@ -30,23 +41,6 @@ export function PropertyPanel({ block, onPatch }: PropertyPanelProps) {
       )}
     </aside>
   );
-}
-
-/** Merge a style patch into any block type's `props.style`. */
-function withStyle(block: BlockNode, style: BlockStyle): BlockNode {
-  return { ...block, props: { ...block.props, style } } as BlockNode;
-}
-
-/** Set the flex layout of a container block (no-op for other types). */
-function withLayout(block: BlockNode, layout: FlexLayout): BlockNode {
-  if (block.type !== 'container') return block;
-  return { ...block, props: { ...block.props, layout } };
-}
-
-/** Set the width of a block. Sliders have no width control. */
-function withWidth(block: BlockNode, width: FieldWidth): BlockNode {
-  if (block.type === 'slider') return block;
-  return { ...block, props: { ...block.props, width } } as BlockNode;
 }
 
 function ContentSection({ block, onPatch }: PropertyPanelProps & { block: BlockNode }) {
@@ -70,8 +64,15 @@ function ContentSection({ block, onPatch }: PropertyPanelProps & { block: BlockN
         />
       );
       break;
-    case 'container':
     case 'slider':
+      body = (
+        <SliderProps
+          block={block}
+          onPatch={(patch) => onPatch(block.id, (b) => patch(b as typeof block))}
+        />
+      );
+      break;
+    case 'container':
       body = null;
       break;
   }
@@ -90,8 +91,12 @@ function ContentSection({ block, onPatch }: PropertyPanelProps & { block: BlockN
 
 function LayoutSection({ block, onPatch }: PropertyPanelProps & { block: BlockNode }) {
   const { t } = useTranslation('admin');
+  const { breakpoint } = useBreakpoint();
+
   // Sliders are always full-width; no layout controls apply.
   if (block.type === 'slider') return null;
+
+  const scope = getScope(block, breakpoint);
 
   return (
     <details className="property-panel__section" open>
@@ -100,14 +105,14 @@ function LayoutSection({ block, onPatch }: PropertyPanelProps & { block: BlockNo
       </summary>
       {block.type === 'container' && (
         <LayoutProps
-          layout={block.props.layout}
-          onChange={(layout) => onPatch(block.id, (b) => withLayout(b, layout))}
+          layout={scope.layout}
+          onChange={(layout) => onPatch(block.id, (b) => setScopeLayout(b, breakpoint, layout))}
         />
       )}
       <FieldShell label={t('sectionBuilder.layout.width')}>
         <WidthSelect
-          value={block.props.width}
-          onChange={(width) => onPatch(block.id, (b) => withWidth(b, width))}
+          value={scope.width}
+          onChange={(width) => onPatch(block.id, (b) => setScopeWidth(b, breakpoint, width))}
         />
       </FieldShell>
     </details>
@@ -116,14 +121,17 @@ function LayoutSection({ block, onPatch }: PropertyPanelProps & { block: BlockNo
 
 function StyleSection({ block, onPatch }: PropertyPanelProps & { block: BlockNode }) {
   const { t } = useTranslation('admin');
+  const { breakpoint } = useBreakpoint();
+  const scope = getScope(block, breakpoint);
+
   return (
     <details className="property-panel__section" open>
       <summary className="property-panel__section-title">
         {t('sectionBuilder.section.style')}
       </summary>
       <StyleProps
-        style={block.props.style}
-        onChange={(style) => onPatch(block.id, (b) => withStyle(b, style))}
+        style={scope.style}
+        onChange={(style) => onPatch(block.id, (b) => setScopeStyle(b, breakpoint, style))}
       />
     </details>
   );

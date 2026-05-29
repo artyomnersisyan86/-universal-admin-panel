@@ -11,7 +11,118 @@
   min-height: 100px;
 }
 
-.sb-slider__hint {
+.sb-slider--empty {
   color: var(--fg-muted);
   font-style: italic;
+}
+
+/* ---- Live carousel preview ---- */
+.sb-slider-preview {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.sb-slider-preview__stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background-color: var(--bg-elev-2);
+}
+
+.sb-slider-preview__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.sb-slider-preview__img--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: var(--fg-muted);
+}
+
+.sb-slider-preview__overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+  padding: var(--space-4);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.65), transparent);
+  color: #fff;
+}
+
+.sb-slider-preview__title,
+.sb-slider-preview__text {
+  color: #fff;
+  margin: 0;
+}
+
+.sb-slider-preview__button {
+  display: inline-block;
+  padding: var(--space-2) var(--space-4);
+  background-color: var(--color-primary);
+  color: var(--fg-on-primary);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+}
+
+.sb-slider-preview__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-pill);
+  background-color: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.sb-slider-preview__nav:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.sb-slider-preview__nav--prev {
+  left: var(--space-2);
+}
+
+.sb-slider-preview__nav--next {
+  right: var(--space-2);
+}
+
+.sb-slider-preview__dots {
+  display: flex;
+  gap: var(--space-1);
+  justify-content: center;
+}
+
+.sb-slider-preview__dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-pill);
+  background-color: var(--border-strong);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.sb-slider-preview__dot--active {
+  background-color: var(--color-primary);
 }
