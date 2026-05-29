@@ -53,8 +53,8 @@
       "fieldType": "Field type"
     },
     "container": {
-      "preview": "Container block",
-      "stageHint": "Nested blocks land in Stage 3"
+      "empty": "Drop blocks here to nest them",
+      "dropHere": "Drop here to add to the end"
     },
     "slider": {
       "preview": "Slider block",

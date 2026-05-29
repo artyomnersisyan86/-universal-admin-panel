@@ -32,16 +32,11 @@ function PaletteCard({ item, label }: { item: PaletteItem; label: string }) {
       ref={setNodeRef}
       {...listeners}
       {...attributes}
-      className={[
-        'sb-palette__card',
-        isDragging && 'sb-palette__card--dragging',
-        item.stub && 'sb-palette__card--stub',
-      ]
+      className={['sb-palette__card', isDragging && 'sb-palette__card--dragging']
         .filter(Boolean)
         .join(' ')}
     >
       <span>{label}</span>
-      {item.stub && <small className="sb-palette__stub-tag">Stage 3</small>}
     </div>
   );
 }

@@ -49,9 +49,9 @@ export function Canvas({ blocks, selectedId, onSelect, onRemove }: CanvasProps) 
               <Block
                 key={b.id}
                 block={b}
-                selected={b.id === selectedId}
-                onSelect={() => onSelect(b.id)}
-                onRemove={() => onRemove(b.id)}
+                selectedId={selectedId}
+                onSelect={onSelect}
+                onRemove={onRemove}
               />
             ))}
           </SortableContext>

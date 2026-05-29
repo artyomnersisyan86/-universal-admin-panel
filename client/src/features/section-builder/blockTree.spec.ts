@@ -3,11 +3,15 @@ import type { BlockNode, ContainerBlock, TypographyBlock } from '@shared/types';
 import {
   emptyLayout,
   findById,
+  findParent,
   indexOfId,
   insertAt,
+  insertIntoContainer,
+  isSelfOrDescendant,
   makeContainerBlock,
   makeFieldBlock,
   makeTypographyBlock,
+  moveAcrossParents,
   moveById,
   normalizeLayout,
   removeById,
@@ -148,6 +152,120 @@ describe('blockTree', () => {
       const a = typography('a');
       const b = typography('b');
       expect(moveById([a, b], 'a', 'missing')).toEqual([a, b]);
+    });
+  });
+
+  describe('findParent', () => {
+    it('locates a top-level node with parentId null', () => {
+      const a = typography('a');
+      const b = typography('b');
+      expect(findParent([a, b], 'b')).toEqual({
+        siblings: [a, b],
+        parentId: null,
+        index: 1,
+      });
+    });
+
+    it('locates a nested node with its container id', () => {
+      const inner = typography('inner');
+      const root = container('root', [inner]);
+      const loc = findParent([root], 'inner');
+      expect(loc?.parentId).toBe('root');
+      expect(loc?.index).toBe(0);
+      expect(loc?.siblings).toBe(root.children);
+    });
+
+    it('returns null when the node is absent', () => {
+      expect(findParent([typography('a')], 'missing')).toBeNull();
+    });
+  });
+
+  describe('isSelfOrDescendant', () => {
+    it('is true for the node itself', () => {
+      const root = container('root', []);
+      expect(isSelfOrDescendant([root], 'root', 'root')).toBe(true);
+    });
+
+    it('is true for a descendant', () => {
+      const inner = container('inner', []);
+      const root = container('root', [inner]);
+      expect(isSelfOrDescendant([root], 'root', 'inner')).toBe(true);
+    });
+
+    it('is false for an unrelated node', () => {
+      const root = container('root', []);
+      const other = typography('other');
+      expect(isSelfOrDescendant([root, other], 'root', 'other')).toBe(false);
+    });
+  });
+
+  describe('insertIntoContainer', () => {
+    it('appends to a container by default', () => {
+      const root = container('root', [typography('a')]);
+      const next = insertIntoContainer([root], 'root', typography('b'));
+      const c = next[0] as ContainerBlock;
+      expect(c.children.map((n) => n.id)).toEqual(['a', 'b']);
+    });
+
+    it('inserts at a given index', () => {
+      const root = container('root', [typography('a'), typography('c')]);
+      const next = insertIntoContainer([root], 'root', typography('b'), 1);
+      const c = next[0] as ContainerBlock;
+      expect(c.children.map((n) => n.id)).toEqual(['a', 'b', 'c']);
+    });
+
+    it('targets nested containers', () => {
+      const inner = container('inner', []);
+      const root = container('root', [inner]);
+      const next = insertIntoContainer([root], 'inner', typography('x'));
+      const innerAfter = (next[0] as ContainerBlock).children[0] as ContainerBlock;
+      expect(innerAfter.children.map((n) => n.id)).toEqual(['x']);
+    });
+
+    it('is a no-op when the container is absent', () => {
+      const a = typography('a');
+      expect(insertIntoContainer([a], 'nope', typography('b'))).toEqual([a]);
+    });
+  });
+
+  describe('moveAcrossParents', () => {
+    it('moves a node from root into a container', () => {
+      const moved = typography('m');
+      const box = container('box', []);
+      const next = moveAcrossParents([moved, box], 'm', 'box', 0);
+      expect(next.map((n) => n.id)).toEqual(['box']);
+      expect((next[0] as ContainerBlock).children.map((n) => n.id)).toEqual(['m']);
+    });
+
+    it('moves a node out of a container to the root', () => {
+      const inner = typography('inner');
+      const box = container('box', [inner]);
+      const next = moveAcrossParents([box], 'inner', null, 0);
+      expect(next.map((n) => n.id)).toEqual(['inner', 'box']);
+      expect((next[1] as ContainerBlock).children).toEqual([]);
+    });
+
+    it('moves between two containers', () => {
+      const item = typography('item');
+      const a = container('a', [item]);
+      const b = container('b', []);
+      const next = moveAcrossParents([a, b], 'item', 'b', 0);
+      expect((next[0] as ContainerBlock).children).toEqual([]);
+      expect((next[1] as ContainerBlock).children.map((n) => n.id)).toEqual(['item']);
+    });
+
+    it('refuses to move a container into its own subtree', () => {
+      const inner = container('inner', []);
+      const root = container('root', [inner]);
+      const before = [root];
+      expect(moveAcrossParents(before, 'root', 'inner', 0)).toBe(before);
+    });
+
+    it('is a no-op when the source is absent', () => {
+      const a = typography('a');
+      const box = container('box', []);
+      const before = [a, box];
+      expect(moveAcrossParents(before, 'missing', 'box', 0)).toBe(before);
     });
   });
 

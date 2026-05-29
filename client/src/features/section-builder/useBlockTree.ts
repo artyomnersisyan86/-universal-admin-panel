@@ -5,6 +5,8 @@ import {
   emptyLayout,
   findById,
   insertAt,
+  insertIntoContainer,
+  moveAcrossParents,
   moveById,
   removeById,
   updateById,
@@ -18,6 +20,10 @@ export interface BlockTreeApi {
   update: (id: string, patch: (node: BlockNode) => BlockNode) => void;
   reorder: (fromId: string, toId: string) => void;
   insertAtIndex: (index: number, node: BlockNode) => void;
+  /** Append (or insert at index) a new node inside a container. */
+  insertInContainer: (containerId: string, node: BlockNode, index?: number) => void;
+  /** Move an existing node to a new parent (`null` = root) at an index. */
+  moveToParent: (fromId: string, toParentId: string | null, toIndex: number) => void;
   findNode: (id: string) => BlockNode | null;
 }
 
@@ -58,13 +64,55 @@ export function useBlockTree(initial?: LayoutTree | null): BlockTreeApi {
     }));
   }, []);
 
+  const insertInContainer = useCallback(
+    (containerId: string, node: BlockNode, index?: number) => {
+      setLayout((l) => ({
+        version: LAYOUT_VERSION,
+        root: insertIntoContainer(l.root, containerId, node, index),
+      }));
+    },
+    [],
+  );
+
+  const moveToParent = useCallback(
+    (fromId: string, toParentId: string | null, toIndex: number) => {
+      setLayout((l) => ({
+        version: LAYOUT_VERSION,
+        root: moveAcrossParents(l.root, fromId, toParentId, toIndex),
+      }));
+    },
+    [],
+  );
+
   const findNode = useCallback(
     (id: string) => findById(layout.root, id),
     [layout.root],
   );
 
   return useMemo(
-    () => ({ layout, reset, append, remove, update, reorder, insertAtIndex, findNode }),
-    [layout, reset, append, remove, update, reorder, insertAtIndex, findNode],
+    () => ({
+      layout,
+      reset,
+      append,
+      remove,
+      update,
+      reorder,
+      insertAtIndex,
+      insertInContainer,
+      moveToParent,
+      findNode,
+    }),
+    [
+      layout,
+      reset,
+      append,
+      remove,
+      update,
+      reorder,
+      insertAtIndex,
+      insertInContainer,
+      moveToParent,
+      findNode,
+    ],
   );
 }

@@ -13,9 +13,10 @@ import type { BlockType, Section } from '@shared/types';
 import { useUpdateSection } from '@features/sections/useSections';
 import { Palette } from './Palette';
 import { Canvas, CANVAS_DROPPABLE_ID } from './Canvas';
+import { CONTAINER_DROPPABLE_PREFIX } from './BlockRenderers/ContainerBlock';
 import { PropertyPanel } from './PropertyPanel';
 import { useBlockTree } from './useBlockTree';
-import { makeBlock, normalizeLayout } from './blockTree';
+import { findById, findParent, makeBlock, normalizeLayout } from './blockTree';
 import './SectionBuilder.css';
 
 interface SectionBuilderProps {
@@ -68,30 +69,54 @@ export function SectionBuilder({ section }: SectionBuilderProps) {
 
   const selected = selectedId ? tree.findNode(selectedId) : null;
 
+  /**
+   * Resolve a drop target into a parent (`null` = root) and an insert index.
+   *
+   * - canvas droppable → end of root
+   * - container droppable slot → end of that container
+   * - over another block → that block's position (insert before it / take its slot)
+   */
+  function resolveTarget(overId: string): { parentId: string | null; index: number } | null {
+    if (overId === CANVAS_DROPPABLE_ID) {
+      return { parentId: null, index: tree.layout.root.length };
+    }
+    if (overId.startsWith(CONTAINER_DROPPABLE_PREFIX)) {
+      const containerId = overId.slice(CONTAINER_DROPPABLE_PREFIX.length);
+      const node = findById(tree.layout.root, containerId);
+      const len = node && node.type === 'container' ? node.children.length : 0;
+      return { parentId: containerId, index: len };
+    }
+    const loc = findParent(tree.layout.root, overId);
+    if (!loc) return null;
+    return { parentId: loc.parentId, index: loc.index };
+  }
+
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     if (!over) return;
+
+    const overId = String(over.id);
+    const target = resolveTarget(overId);
+    if (!target) return;
 
     const data = active.data.current as ActiveData | undefined;
 
     if (isPaletteData(data)) {
       const newBlock = makeBlock(data.blockType);
-      // Drop on a specific block → insert before it; on the canvas → append.
-      const overId = String(over.id);
-      if (overId === CANVAS_DROPPABLE_ID) {
-        tree.append(newBlock);
+      if (target.parentId === null) {
+        tree.insertAtIndex(target.index, newBlock);
       } else {
-        const idx = tree.layout.root.findIndex((b) => b.id === overId);
-        if (idx === -1) tree.append(newBlock);
-        else tree.insertAtIndex(idx, newBlock);
+        tree.insertInContainer(target.parentId, newBlock, target.index);
       }
       setSelectedId(newBlock.id);
       return;
     }
 
-    if (active.id !== over.id) {
-      tree.reorder(String(active.id), String(over.id));
-    }
+    // Moving an existing block. `moveToParent` removes then re-inserts, which
+    // works uniformly for same-parent reorder and cross-parent moves, and
+    // guards against dropping a container into its own subtree.
+    if (active.id === over.id) return;
+    tree.moveToParent(String(active.id), target.parentId, target.index);
   }
 
   async function handleSave() {

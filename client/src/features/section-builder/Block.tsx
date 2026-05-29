@@ -8,14 +8,18 @@ import { ContainerBlockView } from './BlockRenderers/ContainerBlock';
 import { SliderBlockView } from './BlockRenderers/SliderBlock';
 import './Block.css';
 
-interface BlockProps {
-  block: BlockNode;
-  selected: boolean;
-  onSelect: () => void;
-  onRemove: () => void;
+export interface BlockHandlers {
+  selectedId: string | null;
+  onSelect: (id: string) => void;
+  onRemove: (id: string) => void;
 }
 
-export function Block({ block, selected, onSelect, onRemove }: BlockProps) {
+interface BlockProps extends BlockHandlers {
+  block: BlockNode;
+}
+
+export function Block({ block, selectedId, onSelect, onRemove }: BlockProps) {
+  const selected = block.id === selectedId;
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
     data: { source: 'block', blockId: block.id },
@@ -32,12 +36,16 @@ export function Block({ block, selected, onSelect, onRemove }: BlockProps) {
       style={style}
       className={[
         'sb-block',
+        `sb-block--${block.type}`,
         selected && 'sb-block--selected',
         isDragging && 'sb-block--dragging',
       ]
         .filter(Boolean)
         .join(' ')}
-      onClick={onSelect}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect(block.id);
+      }}
     >
       <div className="sb-block__head">
         <span
@@ -55,7 +63,7 @@ export function Block({ block, selected, onSelect, onRemove }: BlockProps) {
           variant="text"
           onClick={(e) => {
             e.stopPropagation();
-            onRemove();
+            onRemove(block.id);
           }}
           aria-label="Remove block"
         >
@@ -63,21 +71,33 @@ export function Block({ block, selected, onSelect, onRemove }: BlockProps) {
         </Button>
       </div>
       <div className="sb-block__body">
-        <BlockBody block={block} />
+        <BlockBody
+          block={block}
+          selectedId={selectedId}
+          onSelect={onSelect}
+          onRemove={onRemove}
+        />
       </div>
     </div>
   );
 }
 
-function BlockBody({ block }: { block: BlockNode }) {
+function BlockBody({ block, selectedId, onSelect, onRemove }: BlockProps) {
   switch (block.type) {
     case 'typography':
       return <TypographyBlockView block={block} />;
     case 'field':
       return <FieldBlockView block={block} />;
     case 'container':
-      return <ContainerBlockView block={block} />;
+      return (
+        <ContainerBlockView
+          block={block}
+          selectedId={selectedId}
+          onSelect={onSelect}
+          onRemove={onRemove}
+        />
+      );
     case 'slider':
-      return <SliderBlockView />;
+      return <SliderBlockView block={block} />;
   }
 }

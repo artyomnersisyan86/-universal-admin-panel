@@ -6,6 +6,7 @@ import type {
   FieldType,
   LayoutTree,
   Multilingual,
+  Slide,
   TypographyBlock,
 } from '@shared/types';
 import { LAYOUT_VERSION } from '@shared/types';
@@ -39,6 +40,48 @@ export function findById(nodes: BlockNode[], id: string): BlockNode | null {
 
 export function indexOfId(nodes: BlockNode[], id: string): number {
   return nodes.findIndex((n) => n.id === id);
+}
+
+/**
+ * Location of a node inside the tree: the sibling array that holds it, the
+ * id of its parent container (`null` = the root array), and its index.
+ */
+export interface NodeLocation {
+  siblings: BlockNode[];
+  parentId: string | null;
+  index: number;
+}
+
+/** Find where `id` lives. Returns `null` if not present anywhere in the tree. */
+export function findParent(
+  root: BlockNode[],
+  id: string,
+  parentId: string | null = null,
+): NodeLocation | null {
+  const index = root.findIndex((n) => n.id === id);
+  if (index !== -1) return { siblings: root, parentId, index };
+  for (const node of root) {
+    if (node.type === 'container') {
+      const found = findParent(node.children, id, node.id);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
+/**
+ * True when `ancestorId` is `nodeId` itself or one of its descendants — used to
+ * forbid dropping a container into its own subtree (which would orphan it).
+ */
+export function isSelfOrDescendant(
+  root: BlockNode[],
+  nodeId: string,
+  ancestorId: string,
+): boolean {
+  if (nodeId === ancestorId) return true;
+  const node = findById(root, nodeId);
+  if (!node || node.type !== 'container') return false;
+  return Boolean(findById(node.children, ancestorId));
 }
 
 export function insertAt(
@@ -84,6 +127,54 @@ export function moveById(
   const [moved] = copy.splice(fromIdx, 1);
   copy.splice(toIdx, 0, moved);
   return copy;
+}
+
+/**
+ * Insert `node` as a child of the container identified by `containerId`.
+ * `index = undefined` appends. No-op (returns input) if the container is not
+ * found. Immutable.
+ */
+export function insertIntoContainer(
+  root: BlockNode[],
+  containerId: string,
+  node: BlockNode,
+  index?: number,
+): BlockNode[] {
+  return root.map((n) => {
+    if (n.id === containerId && n.type === 'container') {
+      const at = index ?? n.children.length;
+      return { ...n, children: insertAt(n.children, at, node) };
+    }
+    if (n.type === 'container') {
+      return { ...n, children: insertIntoContainer(n.children, containerId, node, index) };
+    }
+    return n;
+  });
+}
+
+/**
+ * Move an existing node to a new parent (or the root) at a given index.
+ * `toParentId = null` targets the root array. Guards against moving a
+ * container into its own subtree (returns the tree unchanged in that case).
+ * Immutable.
+ */
+export function moveAcrossParents(
+  root: BlockNode[],
+  fromId: string,
+  toParentId: string | null,
+  toIndex: number,
+): BlockNode[] {
+  if (toParentId !== null && isSelfOrDescendant(root, fromId, toParentId)) {
+    return root;
+  }
+  const node = findById(root, fromId);
+  if (!node) return root;
+
+  const detached = removeById(root, fromId);
+  if (toParentId === null) {
+    return insertAt(detached, toIndex, node);
+  }
+  return insertIntoContainer(detached, toParentId, node, toIndex);
 }
 
 // ---------------------------------------------------------------------------
@@ -141,8 +232,15 @@ export function makeContainerBlock(): BlockNode {
   return {
     id: crypto.randomUUID(),
     type: 'container',
-    props: {},
+    props: { layout: { direction: 'column' } },
     children: [],
+  };
+}
+
+export function makeSlide(): Slide {
+  return {
+    id: crypto.randomUUID(),
+    image: { desktop: '' },
   };
 }
 

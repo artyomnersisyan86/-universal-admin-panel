@@ -44,19 +44,6 @@
   opacity: 0.5;
 }
 
-.sb-palette__card--stub {
-  border-style: dashed;
-  color: var(--fg-muted);
-}
-
-.sb-palette__stub-tag {
-  font-size: 0.7em;
-  padding: 2px var(--space-1);
-  background-color: var(--bg-elev-2);
-  border-radius: var(--radius-sm);
-  color: var(--fg-muted);
-}
-
 .sb-palette__hint {
   color: var(--fg-muted);
 }

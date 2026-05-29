@@ -1,17 +1,48 @@
 .sb-container {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
-  padding: var(--space-4);
-  background-color: var(--bg);
-  border: 2px dashed var(--border-strong);
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background-color: var(--bg-elev);
+  border: 1px dashed var(--border-strong);
   border-radius: var(--radius-md);
-  text-align: center;
-  min-height: 80px;
-  justify-content: center;
+  min-height: 64px;
 }
 
-.sb-container__hint {
+.sb-container--row {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+/* Drop slot — the explicit "nest here" affordance below the children. */
+.sb-container__slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
   color: var(--fg-muted);
   font-style: italic;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+/* When the container is empty the slot grows to fill it, making the whole
+   container an obvious drop target. */
+.sb-container__slot--empty {
+  flex: 1;
+  min-height: 48px;
+}
+
+/* In a row container the slot should not stretch across the whole row. */
+.sb-container--row .sb-container__slot {
+  flex: 0 0 auto;
+  align-self: stretch;
+}
+
+.sb-container__slot--over {
+  background-color: var(--bg-elev-2);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }

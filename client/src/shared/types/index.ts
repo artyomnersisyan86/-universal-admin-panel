@@ -127,6 +127,69 @@ export type TypographyVariant =
  */
 export type LocalizedText = string | Multilingual<string>;
 
+// ---------------------------------------------------------------------------
+// Style / layout / responsive primitives (Stage 3)
+//
+// All of these are OPTIONAL on block props so layouts authored in Stage 2
+// (where blocks had `props: {}` / `props: { slides: [] }`) keep validating and
+// rendering unchanged. No layout migration is required — `LAYOUT_VERSION`
+// stays at 1.
+// ---------------------------------------------------------------------------
+
+/**
+ * Visual styling applied to a block wrapper. Values are CSS strings — either a
+ * token reference (`var(--space-3)`, `var(--color-primary)`) or a literal
+ * (`#ff0000`, `12px`). `undefined` means "inherit / no override".
+ */
+export interface BlockStyle {
+  backgroundColor?: string;
+  textColor?: string;
+  padding?: string;
+  margin?: string;
+  borderRadius?: string;
+  borderColor?: string;
+  borderWidth?: string;
+}
+
+export type FlexDirection = 'row' | 'column';
+export type FlexWrap = 'nowrap' | 'wrap';
+export type JustifyContent =
+  | 'flex-start'
+  | 'flex-end'
+  | 'center'
+  | 'space-between'
+  | 'space-around'
+  | 'space-evenly';
+export type AlignItems = 'flex-start' | 'flex-end' | 'center' | 'stretch' | 'baseline';
+
+/** Flex container settings (applies to container blocks, and field rows). */
+export interface FlexLayout {
+  direction?: FlexDirection;
+  gap?: string;
+  justifyContent?: JustifyContent;
+  alignItems?: AlignItems;
+  wrap?: FlexWrap;
+}
+
+/** Width of a child block when its parent lays children out in a flex row. */
+export type FieldWidth = '100%' | '50%' | '33%' | 'auto';
+
+export type Breakpoint = 'desktop' | 'tablet' | 'mobile';
+
+/**
+ * Per-breakpoint overrides. `desktop` is the base (stored on the block props
+ * directly), so only `tablet` and `mobile` carry overrides here. Any subset of
+ * style/layout/width may be overridden.
+ */
+export type BreakpointOverride = Partial<BlockStyle & FlexLayout> & {
+  width?: FieldWidth;
+};
+
+export interface ResponsiveOverrides {
+  tablet?: BreakpointOverride;
+  mobile?: BreakpointOverride;
+}
+
 export interface TypographyBlock {
   id: string;
   type: 'typography';
@@ -134,26 +197,56 @@ export interface TypographyBlock {
     variant: TypographyVariant;
     text: LocalizedText;
     multilingual: boolean;
+    style?: BlockStyle;
+    width?: FieldWidth;
+    responsive?: ResponsiveOverrides;
   };
 }
 
 export interface FieldBlock {
   id: string;
   type: 'field';
-  props: { field: FieldDef };
+  props: {
+    field: FieldDef;
+    style?: BlockStyle;
+    width?: FieldWidth;
+    responsive?: ResponsiveOverrides;
+  };
 }
 
 export interface ContainerBlock {
   id: string;
   type: 'container';
-  props: Record<string, never>;
+  props: {
+    style?: BlockStyle;
+    layout?: FlexLayout;
+    width?: FieldWidth;
+    responsive?: ResponsiveOverrides;
+  };
   children: BlockNode[];
+}
+
+export interface Slide {
+  id: string;
+  title?: LocalizedText;
+  multilingualTitle?: boolean;
+  text?: LocalizedText;
+  multilingualText?: boolean;
+  buttonLabel?: LocalizedText;
+  multilingualButton?: boolean;
+  buttonUrl?: string;
+  /** Desktop image is required; mobile is an optional override. URLs from /api/uploads. */
+  image: { desktop: string; mobile?: string };
 }
 
 export interface SliderBlock {
   id: string;
   type: 'slider';
-  props: { slides: [] };
+  props: {
+    slides: Slide[];
+    style?: BlockStyle;
+    responsive?: ResponsiveOverrides;
+  };
 }
 
 export type BlockNode = TypographyBlock | FieldBlock | ContainerBlock | SliderBlock;
