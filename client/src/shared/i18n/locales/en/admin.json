@@ -54,7 +54,15 @@
     },
     "section": {
       "content": "Content",
+      "layout": "Layout",
       "style": "Style"
+    },
+    "layout": {
+      "direction": "Direction",
+      "gap": "Gap",
+      "justify": "Justify",
+      "align": "Align",
+      "width": "Width"
     },
     "style": {
       "background": "Background",

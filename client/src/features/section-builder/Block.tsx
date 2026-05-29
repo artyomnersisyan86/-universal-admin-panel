@@ -2,11 +2,12 @@ import type { CSSProperties } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from '@shared/ui/Button';
-import type { BlockNode, BlockStyle } from '@shared/types';
+import type { BlockNode } from '@shared/types';
 import { TypographyBlockView } from './BlockRenderers/TypographyBlock';
 import { FieldBlockView } from './BlockRenderers/FieldBlock';
 import { ContainerBlockView } from './BlockRenderers/ContainerBlock';
 import { SliderBlockView } from './BlockRenderers/SliderBlock';
+import { bodyStyleVars, widthToCss } from './blockStyle';
 import './Block.css';
 
 export interface BlockHandlers {
@@ -27,10 +28,12 @@ export function Block({ block, selectedId, onSelect, onRemove }: BlockProps) {
   });
 
   const blockStyle = block.props.style;
+  const width = 'width' in block.props ? block.props.width : undefined;
   const style: CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
     ...(blockStyle?.margin ? { margin: blockStyle.margin } : {}),
+    ...widthToCss(width),
   };
 
   return (
@@ -83,23 +86,6 @@ export function Block({ block, selectedId, onSelect, onRemove }: BlockProps) {
       </div>
     </div>
   );
-}
-
-/**
- * Map a block's style to `--sb-*` custom properties consumed by Block.css.
- * Only defined values are emitted; CSS `var(..., fallback)` handles the rest,
- * which keeps unstyled blocks looking exactly as before. Stage 3.5 will layer
- * per-breakpoint vars on top of these.
- */
-function bodyStyleVars(style: BlockStyle | undefined): CSSProperties {
-  const vars: Record<string, string> = {};
-  if (style?.backgroundColor) vars['--sb-bg'] = style.backgroundColor;
-  if (style?.textColor) vars['--sb-fg'] = style.textColor;
-  if (style?.padding) vars['--sb-pad'] = style.padding;
-  if (style?.borderRadius) vars['--sb-radius'] = style.borderRadius;
-  if (style?.borderColor) vars['--sb-border-color'] = style.borderColor;
-  if (style?.borderWidth) vars['--sb-border-width'] = style.borderWidth;
-  return vars as CSSProperties;
 }
 
 function BlockBody({ block, selectedId, onSelect, onRemove }: BlockProps) {

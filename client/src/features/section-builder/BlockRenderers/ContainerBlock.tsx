@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Typography } from '@shared/ui/Typography';
 import type { ContainerBlock } from '@shared/types';
 import { Block, type BlockHandlers } from '../Block';
+import { containerLayoutVars } from '../blockStyle';
 import './ContainerBlock.css';
 
 /** Droppable id for the empty slot inside a container, e.g. `sb-droppable:<uuid>`. */
@@ -33,6 +34,7 @@ export function ContainerBlockView({ block, selectedId, onSelect, onRemove }: Pr
   return (
     <div
       className={['sb-container', isRow && 'sb-container--row'].filter(Boolean).join(' ')}
+      style={containerLayoutVars(layout)}
     >
       <SortableContext
         items={childIds}

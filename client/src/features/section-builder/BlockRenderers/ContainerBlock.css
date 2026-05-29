@@ -1,7 +1,9 @@
 .sb-container {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--sb-gap, var(--space-2));
+  justify-content: var(--sb-justify, flex-start);
+  align-items: var(--sb-align, stretch);
   padding: var(--space-3);
   background-color: var(--bg-elev);
   border: 1px dashed var(--border-strong);
@@ -12,7 +14,11 @@
 .sb-container--row {
   flex-direction: row;
   flex-wrap: wrap;
-  align-items: flex-start;
+}
+
+/* Flex children can shrink below their content size so fixed widths fit. */
+.sb-container > .sb-block {
+  min-width: 0;
 }
 
 /* Drop slot — the explicit "nest here" affordance below the children. */
