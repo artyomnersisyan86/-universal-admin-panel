@@ -15,3 +15,75 @@
 .form-group__fieldset:disabled {
   opacity: 0.7;
 }
+
+/* ---------- checkbox ---------- */
+
+.form-group__checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  user-select: none;
+}
+
+.form-group__checkbox input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+/* ---------- switch (toggle) ---------- */
+
+.form-group__switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+
+.form-group__switch input[type='checkbox'] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.form-group__switch-track {
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  background-color: var(--border-strong);
+  border-radius: var(--radius-pill);
+  position: relative;
+  transition: background-color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.form-group__switch-track::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background-color: var(--bg);
+  border-radius: 50%;
+  transition: transform var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-group__switch input[type='checkbox']:checked + .form-group__switch-track {
+  background-color: var(--color-primary);
+}
+
+.form-group__switch input[type='checkbox']:checked + .form-group__switch-track::after {
+  transform: translateX(16px);
+}
+
+.form-group__switch input[type='checkbox']:focus-visible + .form-group__switch-track {
+  box-shadow: var(--focus-ring);
+}

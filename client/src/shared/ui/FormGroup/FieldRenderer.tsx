@@ -3,7 +3,7 @@ import type { FieldDef, SupportedLanguage } from '@shared/types';
 import { FieldShell } from '../_FieldShell';
 import { TextInput } from '../TextInput';
 import { Select } from '../Select';
-import { TinyMCEEditor } from '../TinyMCEEditor';
+import { RichTextEditor } from '../RichTextEditor';
 import { ImageUpload } from '../ImageUpload';
 import { FileUpload } from '../FileUpload';
 import { LanguageTabs } from '../LanguageTabs';
@@ -28,6 +28,32 @@ export function FieldRenderer({ field, uploadFn }: FieldRendererProps) {
       >
         {field.label}
       </Button>
+    );
+  }
+
+  // Boolean fields render inline (label next to control), no FieldShell wrapping.
+  if (field.type === 'checkbox' || field.type === 'switch') {
+    return (
+      <Controller
+        control={control}
+        name={field.name}
+        render={({ field: ctrl }) => (
+          <label
+            className={
+              field.type === 'switch' ? 'form-group__switch' : 'form-group__checkbox'
+            }
+          >
+            <input
+              type="checkbox"
+              checked={Boolean(ctrl.value)}
+              onChange={(e) => ctrl.onChange(e.target.checked)}
+              onBlur={ctrl.onBlur}
+            />
+            {field.type === 'switch' && <span className="form-group__switch-track" aria-hidden />}
+            <span>{field.label}</span>
+          </label>
+        )}
+      />
     );
   }
 
@@ -116,9 +142,10 @@ function renderInputForType(
       );
     case 'richtext':
       return (
-        <TinyMCEEditor
+        <RichTextEditor
           value={(ctrl.value as string) ?? ''}
           onChange={(html) => ctrl.onChange(html)}
+          placeholder={field.placeholder}
         />
       );
     case 'image':

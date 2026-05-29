@@ -13,7 +13,15 @@ export interface User {
   updatedAt: string;
 }
 
-export type FieldType = 'text' | 'select' | 'richtext' | 'image' | 'file' | 'button';
+export type FieldType =
+  | 'text'
+  | 'select'
+  | 'checkbox'
+  | 'switch'
+  | 'richtext'
+  | 'image'
+  | 'file'
+  | 'button';
 
 export interface SelectOption {
   value: string;
@@ -93,4 +101,76 @@ export interface TableRow {
   data: Record<string, unknown>;
   createdAt?: string;
   updatedAt?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Section / block-builder types (Stage 2)
+// ---------------------------------------------------------------------------
+
+export const LAYOUT_VERSION = 1 as const;
+
+export type BlockType = 'typography' | 'field' | 'container' | 'slider';
+
+export type TypographyVariant =
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'h6'
+  | 'body'
+  | 'caption';
+
+/**
+ * Text payload that can be either a plain string (multilingual=false)
+ * or per-locale strings (multilingual=true).
+ */
+export type LocalizedText = string | Multilingual<string>;
+
+export interface TypographyBlock {
+  id: string;
+  type: 'typography';
+  props: {
+    variant: TypographyVariant;
+    text: LocalizedText;
+    multilingual: boolean;
+  };
+}
+
+export interface FieldBlock {
+  id: string;
+  type: 'field';
+  props: { field: FieldDef };
+}
+
+export interface ContainerBlock {
+  id: string;
+  type: 'container';
+  props: Record<string, never>;
+  children: BlockNode[];
+}
+
+export interface SliderBlock {
+  id: string;
+  type: 'slider';
+  props: { slides: [] };
+}
+
+export type BlockNode = TypographyBlock | FieldBlock | ContainerBlock | SliderBlock;
+
+export interface LayoutTree {
+  version: typeof LAYOUT_VERSION;
+  root: BlockNode[];
+}
+
+export interface Section {
+  id: string;
+  slug: string;
+  name: Multilingual<string>;
+  layout: LayoutTree;
+  isPublic: boolean;
+  displayOrder: number;
+  icon?: string | null;
+  createdAt: string;
+  updatedAt: string;
 }

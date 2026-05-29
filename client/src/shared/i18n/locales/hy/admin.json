@@ -1,10 +1,65 @@
 {
   "nav": {
     "dashboard": "Վահանակ",
+    "sections": "Բաժիններ",
     "formBuilder": "Ձևի կառուցիչ",
     "tables": "Աղյուսակներ",
     "apiBuilder": "API կառուցիչ",
     "settings": "Կարգավորումներ"
+  },
+  "sections": {
+    "title": "Բաժիններ",
+    "create": "+ Նոր բաժին",
+    "slug": "Slug (URL-ի մաս)",
+    "slugPlaceholder": "օր. news, products",
+    "name": "Անուն",
+    "namePlaceholder": {
+      "hy": "օր. Նորություններ",
+      "ru": "օր. Новости",
+      "en": "օր. News"
+    },
+    "public": "Հանրային ընթերցման համար",
+    "publicHint": "GET-ները չեն պահանջում մուտքագրում",
+    "empty": "Բաժիններ դեռ չկան։ Ստեղծեք առաջինը՝ ձեր կայքի համար։",
+    "confirmDelete": "Ջնջե՞լ «{{name}}» բաժինը և բոլոր գրառումները։",
+    "backToList": "Բաժինների ցանկ",
+    "notFound": "Բաժինը չի գտնվել",
+    "errors": {
+      "slugRequired": "Slug-ը պարտադիր է",
+      "slugFormat": "Միայն փոքրատառ լատինական, թվեր և գծիկ",
+      "slugLong": "Չափից երկար է",
+      "nameRequired": "Անունը պարտադիր է"
+    }
+  },
+  "sectionBuilder": {
+    "palette": "Բլոկներ",
+    "paletteHint": "Քաշեք բլոկները կտավի վրա",
+    "canvas": "Կտավ",
+    "properties": "Հատկություններ",
+    "save": "Պահել",
+    "savedAt": "Պահված է {{time}}",
+    "emptyCanvas": "Քաշեք բլոկ պալիտրայից այստեղ",
+    "selectHint": "Ընտրեք բլոկ՝ խմբագրելու համար",
+    "block": {
+      "typography": "Տեքստ / վերնագիր",
+      "field": "Դաշտ",
+      "container": "Կոնտեյներ",
+      "slider": "Slider"
+    },
+    "props": {
+      "variant": "Տարբերակ",
+      "text": "Տեքստ",
+      "multilingual": "Բազմալեզու",
+      "fieldType": "Դաշտի տեսակ"
+    },
+    "container": {
+      "preview": "Կոնտեյների բլոկ",
+      "stageHint": "Փաթաթված բլոկները կհայտնվեն 3-րդ փուլում"
+    },
+    "slider": {
+      "preview": "Slider բլոկ",
+      "stageHint": "Սլայդերի խմբագրիչը կհայտնվի 3-րդ փուլում"
+    }
   },
   "formBuilder": {
     "palette": "Տարրեր",
@@ -14,6 +69,8 @@
     "field": {
       "text": "Տեքստ",
       "select": "Ընտրացանկ",
+      "checkbox": "Checkbox",
+      "switch": "Switch",
       "richtext": "Հարուստ տեքստ",
       "image": "Նկար",
       "file": "Ֆայլ",

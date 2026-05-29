@@ -35,7 +35,7 @@ universal-admin-panel/
 │   │   │   │   ├── LanguageTabs/    # hy | ru | en wrapper
 │   │   │   │   ├── TextInput/
 │   │   │   │   ├── Select/
-│   │   │   │   ├── TinyMCEEditor/   # @tinymce/tinymce-react
+│   │   │   │   ├── RichTextEditor/  # @tiptap/react + @tiptap/starter-kit
 │   │   │   │   ├── ImageUpload/
 │   │   │   │   ├── FileUpload/
 │   │   │   │   └── index.ts
@@ -353,7 +353,7 @@ Typography uses `clamp()`:
 1. **ORM choice** — spec says "TypeORM (or Prisma)". I propose **TypeORM** for tighter NestJS integration. OK?
 2. **Server state lib** — I propose `@tanstack/react-query`. Spec doesn't mention it. OK?
 3. **Auth storage** — JWT in `localStorage` vs `httpOnly` cookie. I propose `localStorage` for simplicity (Bearer token); cookie route is safer against XSS. Which?
-4. **TinyMCE license** — TinyMCE 6 requires an API key for cloud or self-hosted bundle. I'll wire it via `VITE_TINYMCE_API_KEY` and document. OK?
+4. **Rich text editor** — uses **TipTap** (`@tiptap/react` + `@tiptap/starter-kit`). Headless, MIT-licensed, no API key required. Replaced the original TinyMCE plan during Stage 2.
 5. **Monorepo tool** — npm workspaces (simplest) vs Turborepo/pnpm. I propose **npm workspaces**. OK?
 6. **Rename `․claude/`** → `.claude/` (current folder uses U+2024, not real dot — breaks Claude Code tooling). OK to rename?
 

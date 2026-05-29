@@ -1,0 +1,128 @@
+.sb-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.sb-field__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.sb-field__type {
+  font-family: var(--font-family-mono);
+  font-size: 0.75em;
+  padding: 2px var(--space-1);
+  background-color: var(--bg-elev-2);
+  border-radius: var(--radius-sm);
+  color: var(--fg-muted);
+  text-transform: uppercase;
+}
+
+.sb-field__preview {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--bg);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--fg-muted);
+  font-family: inherit;
+  font-size: 0.95em;
+}
+
+.sb-field__preview--block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 64px;
+}
+
+.sb-field__preview--rich {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  padding-left: var(--space-3);
+}
+
+.sb-field__preview--button {
+  width: auto;
+  align-self: flex-start;
+  cursor: not-allowed;
+  background-color: var(--color-primary);
+  color: var(--fg-on-primary);
+  border-style: solid;
+}
+
+.sb-field__flags {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.sb-field__flag {
+  font-size: 0.7em;
+  padding: 2px var(--space-1);
+  background-color: var(--bg-elev);
+  color: var(--fg-muted);
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sb-field__inline {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--fg-muted);
+  cursor: not-allowed;
+}
+
+.sb-field__inline input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+}
+
+.sb-field__switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--fg-muted);
+  cursor: not-allowed;
+  position: relative;
+}
+
+.sb-field__switch input[type='checkbox'] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.sb-field__switch-track {
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  background-color: var(--border-strong);
+  border-radius: var(--radius-pill);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.sb-field__switch-track::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background-color: var(--bg);
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+}
+
+.sb-field__upload-preview {
+  pointer-events: none;
+  opacity: 0.7;
+}

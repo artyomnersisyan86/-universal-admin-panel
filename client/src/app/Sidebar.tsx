@@ -11,6 +11,7 @@ interface NavItem {
 
 const ITEMS: NavItem[] = [
   { to: '/dashboard', i18nKey: 'nav.dashboard' },
+  { to: '/sections', i18nKey: 'nav.sections', superadminOnly: true },
   { to: '/form-builder', i18nKey: 'nav.formBuilder' },
   { to: '/tables', i18nKey: 'nav.tables' },
   { to: '/api-builder', i18nKey: 'nav.apiBuilder', superadminOnly: true },

@@ -2,7 +2,7 @@ export * from './Typography';
 export * from './Button';
 export * from './TextInput';
 export * from './Select';
-export * from './TinyMCEEditor';
+export * from './RichTextEditor';
 export * from './ImageUpload';
 export * from './FileUpload';
 export * from './LanguageTabs';

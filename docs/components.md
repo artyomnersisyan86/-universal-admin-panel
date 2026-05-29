@@ -129,15 +129,18 @@ Bare themed input. Use inside `FieldShell` or `FormGroup`.
 
 ---
 
-## TinyMCEEditor
+## RichTextEditor
 
-Wrapper around `@tinymce/tinymce-react`. Needs `VITE_TINYMCE_API_KEY`.
+TipTap-based HTML editor (`@tiptap/react` + `@tiptap/starter-kit`). Headless,
+no API key required, toolbar built from the app's own `Button` component.
 
 ```tsx
-<TinyMCEEditor value={html} onChange={setHtml} height={400} />
+<RichTextEditor value={html} onChange={setHtml} placeholder="Write something…" />
 ```
 
-Dark theme is auto-detected from `<body data-theme="dark">`.
+Output is HTML; consumers store it as a string and render via
+`dangerouslySetInnerHTML` on the display side. Theme uses `tokens.css`,
+so dark mode is automatic via `[data-theme="dark"]` on `<body>`.
 
 ---
 
@@ -190,4 +193,4 @@ To reuse a `shared/ui/*` component in another project:
 
 1. Copy the folder.
 2. Copy `src/styles/tokens.css` (or merge custom properties into your own theme).
-3. Make sure `react`, `react-i18next` (if used), and the component's specific deps (e.g., `@tinymce/tinymce-react`) are installed.
+3. Make sure `react`, `react-i18next` (if used), and the component's specific deps (e.g., `@tiptap/react` + `@tiptap/starter-kit` for `RichTextEditor`) are installed.

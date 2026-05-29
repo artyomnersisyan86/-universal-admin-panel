@@ -49,7 +49,6 @@ services:
       args:
         VITE_API_URL: /api
         VITE_DEFAULT_LANG: ${VITE_DEFAULT_LANG:-hy}
-        VITE_TINYMCE_API_KEY: ${VITE_TINYMCE_API_KEY:-}
     container_name: uap_client
     restart: unless-stopped
 

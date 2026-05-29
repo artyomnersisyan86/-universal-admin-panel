@@ -1,10 +1,65 @@
 {
   "nav": {
     "dashboard": "Дашборд",
+    "sections": "Разделы",
     "formBuilder": "Конструктор форм",
     "tables": "Таблицы",
     "apiBuilder": "Конструктор API",
     "settings": "Настройки"
+  },
+  "sections": {
+    "title": "Разделы",
+    "create": "+ Новый раздел",
+    "slug": "Slug (часть URL)",
+    "slugPlaceholder": "напр. news, products",
+    "name": "Название",
+    "namePlaceholder": {
+      "hy": "напр. Նորություններ",
+      "ru": "напр. Новости",
+      "en": "напр. News"
+    },
+    "public": "Доступ к чтению без авторизации",
+    "publicHint": "GET-запросы не требуют JWT",
+    "empty": "Разделов пока нет. Создайте первый — он появится в боковом меню.",
+    "confirmDelete": "Удалить раздел «{{name}}» и все его записи?",
+    "backToList": "К списку разделов",
+    "notFound": "Раздел не найден",
+    "errors": {
+      "slugRequired": "Slug обязателен",
+      "slugFormat": "Только латиница в нижнем регистре, цифры и дефис",
+      "slugLong": "Слишком длинный",
+      "nameRequired": "Название обязательно"
+    }
+  },
+  "sectionBuilder": {
+    "palette": "Блоки",
+    "paletteHint": "Перетащите блок на холст",
+    "canvas": "Холст",
+    "properties": "Свойства",
+    "save": "Сохранить",
+    "savedAt": "Сохранено в {{time}}",
+    "emptyCanvas": "Перетащите блок из палитры сюда",
+    "selectHint": "Выберите блок, чтобы редактировать",
+    "block": {
+      "typography": "Текст / заголовок",
+      "field": "Поле формы",
+      "container": "Контейнер",
+      "slider": "Слайдер"
+    },
+    "props": {
+      "variant": "Вариант",
+      "text": "Текст",
+      "multilingual": "Многоязычное",
+      "fieldType": "Тип поля"
+    },
+    "container": {
+      "preview": "Блок-контейнер",
+      "stageHint": "Вложенные блоки появятся в этапе 3"
+    },
+    "slider": {
+      "preview": "Блок-слайдер",
+      "stageHint": "Редактор слайдов появится в этапе 3"
+    }
   },
   "formBuilder": {
     "palette": "Элементы",
@@ -14,6 +69,8 @@
     "field": {
       "text": "Текст",
       "select": "Список",
+      "checkbox": "Чекбокс",
+      "switch": "Переключатель",
       "richtext": "Rich text",
       "image": "Изображение",
       "file": "Файл",

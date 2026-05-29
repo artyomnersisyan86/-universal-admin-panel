@@ -34,12 +34,14 @@ export function PropertyPanel({ field, onChange }: PropertyPanelProps) {
           </FieldShell>
           {field.type !== 'button' && (
             <>
-              <FieldShell label={t('formBuilder.props.placeholder')}>
-                <TextInput
-                  value={field.placeholder ?? ''}
-                  onChange={(e) => onChange({ placeholder: e.target.value })}
-                />
-              </FieldShell>
+              {field.type !== 'checkbox' && field.type !== 'switch' && (
+                <FieldShell label={t('formBuilder.props.placeholder')}>
+                  <TextInput
+                    value={field.placeholder ?? ''}
+                    onChange={(e) => onChange({ placeholder: e.target.value })}
+                  />
+                </FieldShell>
+              )}
 
               <label className="property-panel__check">
                 <input

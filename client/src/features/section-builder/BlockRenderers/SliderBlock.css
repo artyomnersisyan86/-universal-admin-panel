@@ -1,0 +1,17 @@
+.sb-slider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  background-color: var(--bg-elev-2);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  min-height: 100px;
+}
+
+.sb-slider__hint {
+  color: var(--fg-muted);
+  font-style: italic;
+}

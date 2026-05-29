@@ -7,6 +7,8 @@ import { FormBuilderPage } from '@/pages/FormBuilderPage';
 import { TablesPage } from '@/pages/TablesPage';
 import { ApiBuilderPage } from '@/pages/ApiBuilderPage';
 import { SettingsPage } from '@/pages/SettingsPage';
+import { SectionsPage } from '@/pages/SectionsPage';
+import { SectionBuilderPage } from '@/pages/SectionBuilderPage';
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -44,6 +46,22 @@ export function AppRoutes() {
       >
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={<DashboardPage />} />
+        <Route
+          path="sections"
+          element={
+            <RequireRole role="superadmin">
+              <SectionsPage />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="sections/:id"
+          element={
+            <RequireRole role="superadmin">
+              <SectionBuilderPage />
+            </RequireRole>
+          }
+        />
         <Route path="form-builder" element={<FormBuilderPage />} />
         <Route path="form-builder/:id" element={<FormBuilderPage />} />
         <Route path="tables" element={<TablesPage />} />

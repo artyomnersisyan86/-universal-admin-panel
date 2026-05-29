@@ -1,0 +1,30 @@
+.sb-canvas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.sb-canvas__drop {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 320px;
+  padding: var(--space-3);
+  background-color: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.sb-canvas__drop--empty {
+  border-style: dashed;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--fg-muted);
+}
+
+.sb-canvas__drop--over {
+  border-color: var(--color-primary);
+  background-color: var(--bg-elev-2);
+}

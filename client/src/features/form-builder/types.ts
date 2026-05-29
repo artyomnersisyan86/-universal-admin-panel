@@ -8,6 +8,8 @@ export interface PaletteItem {
 export const PALETTE: PaletteItem[] = [
   { type: 'text', i18nKey: 'formBuilder.field.text' },
   { type: 'select', i18nKey: 'formBuilder.field.select' },
+  { type: 'checkbox', i18nKey: 'formBuilder.field.checkbox' },
+  { type: 'switch', i18nKey: 'formBuilder.field.switch' },
   { type: 'richtext', i18nKey: 'formBuilder.field.richtext' },
   { type: 'image', i18nKey: 'formBuilder.field.image' },
   { type: 'file', i18nKey: 'formBuilder.field.file' },

@@ -15,6 +15,13 @@ export function buildZodSchema(fields: FieldDef[]) {
   for (const f of fields) {
     if (f.type === 'button') continue;
 
+    if (f.type === 'checkbox' || f.type === 'switch') {
+      shape[f.name] = f.required
+        ? z.literal(true, { message: 'required' })
+        : z.boolean().optional();
+      continue;
+    }
+
     if (f.multilingual) {
       const langShape: Record<string, ZodTypeAny> = {};
       for (const lang of LANGS) {
@@ -72,10 +79,10 @@ export function buildDefaultValues(fields: FieldDef[]): Record<string, unknown> 
   const values: Record<string, unknown> = {};
   for (const f of fields) {
     if (f.type === 'button') continue;
-    if (f.multilingual) {
+    if (f.type === 'checkbox' || f.type === 'switch') {
+      values[f.name] = false;
+    } else if (f.multilingual) {
       values[f.name] = { hy: '', ru: '', en: '' };
-    } else if (f.type === 'image' || f.type === 'file') {
-      values[f.name] = '';
     } else {
       values[f.name] = '';
     }

@@ -1,9 +1,0 @@
-.tinymce-wrapper {
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  border: 1px solid var(--border);
-}
-
-.tinymce-wrapper .tox-tinymce {
-  border: none;
-}

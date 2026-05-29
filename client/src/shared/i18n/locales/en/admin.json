@@ -1,10 +1,65 @@
 {
   "nav": {
     "dashboard": "Dashboard",
+    "sections": "Sections",
     "formBuilder": "Form Builder",
     "tables": "Tables",
     "apiBuilder": "API Builder",
     "settings": "Settings"
+  },
+  "sections": {
+    "title": "Sections",
+    "create": "+ New section",
+    "slug": "Slug (URL part)",
+    "slugPlaceholder": "e.g. news, products",
+    "name": "Name",
+    "namePlaceholder": {
+      "hy": "e.g. Նորություններ",
+      "ru": "e.g. Новости",
+      "en": "e.g. News"
+    },
+    "public": "Public read access",
+    "publicHint": "GET requests don't require JWT",
+    "empty": "No sections yet. Create your first one — it'll show up in the sidebar.",
+    "confirmDelete": "Delete section \"{{name}}\" and all its entries?",
+    "backToList": "Back to sections",
+    "notFound": "Section not found",
+    "errors": {
+      "slugRequired": "Slug is required",
+      "slugFormat": "Lowercase latin, digits and hyphen only",
+      "slugLong": "Too long",
+      "nameRequired": "Name is required"
+    }
+  },
+  "sectionBuilder": {
+    "palette": "Blocks",
+    "paletteHint": "Drag a block onto the canvas",
+    "canvas": "Canvas",
+    "properties": "Properties",
+    "save": "Save",
+    "savedAt": "Saved at {{time}}",
+    "emptyCanvas": "Drag a block from the palette here",
+    "selectHint": "Select a block to edit",
+    "block": {
+      "typography": "Text / heading",
+      "field": "Form field",
+      "container": "Container",
+      "slider": "Slider"
+    },
+    "props": {
+      "variant": "Variant",
+      "text": "Text",
+      "multilingual": "Multilingual",
+      "fieldType": "Field type"
+    },
+    "container": {
+      "preview": "Container block",
+      "stageHint": "Nested blocks land in Stage 3"
+    },
+    "slider": {
+      "preview": "Slider block",
+      "stageHint": "Slide editor lands in Stage 3"
+    }
   },
   "formBuilder": {
     "palette": "Fields",
@@ -14,6 +69,8 @@
     "field": {
       "text": "Text",
       "select": "Select",
+      "checkbox": "Checkbox",
+      "switch": "Switch",
       "richtext": "Rich text",
       "image": "Image",
       "file": "File",

@@ -80,8 +80,7 @@ Visit **http://localhost** (Nginx fronts both client `/` and API `/api`).
 
 ```bash
 cp .env.example .env
-# Set strong JWT_SECRET, POSTGRES_PASSWORD, SEED_SUPERADMIN_PASSWORD,
-# VITE_TINYMCE_API_KEY (TinyMCE cloud key)
+# Set strong JWT_SECRET, POSTGRES_PASSWORD, SEED_SUPERADMIN_PASSWORD
 
 docker compose -f docker-compose.prod.yml up -d --build
 ```
@@ -107,7 +106,6 @@ docker compose -f docker-compose.prod.yml exec server npm run migration:run
 | `MAX_UPLOAD_MB`              | 10                                   | Max upload size                        |
 | `VITE_API_URL`               | /api                                 | Client → API base URL                  |
 | `VITE_DEFAULT_LANG`          | hy                                   | Default UI language                    |
-| `VITE_TINYMCE_API_KEY`       | (empty)                              | https://www.tiny.cloud/ key            |
 | `NGINX_HTTP_PORT`            | 80                                   | Exposed HTTP port                      |
 
 ## Docs
