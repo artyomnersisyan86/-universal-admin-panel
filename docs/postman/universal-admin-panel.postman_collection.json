@@ -1,0 +1,438 @@
+{
+  "info": {
+    "name": "Universal Admin Panel",
+    "_postman_id": "b7c9d1e2-0a3f-4c6b-9e8d-uap000000001",
+    "description": "REST surface of the Universal Admin Panel.\n\nFlow: run **Auth → Login** first (it stores `{{token}}`), then create a section, then create/publish entries through the universal `/api/:sectionSlug` dispatcher.\n\nCollection-level auth sends `Authorization: Bearer {{token}}` on every request; public GETs work without it too. Requests use the `{{baseUrl}}` variable — import `universal-admin-panel.postman_environment.json` and pick the right base URL (`http://localhost:3000` outside Docker, `http://localhost` behind Nginx).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "token", "value": "" },
+    { "key": "sectionSlug", "value": "news" },
+    { "key": "sectionId", "value": "" },
+    { "key": "entryId", "value": "" },
+    { "key": "templateId", "value": "" },
+    { "key": "email", "value": "admin@example.com" },
+    { "key": "password", "value": "admin" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200/201', () => pm.expect(pm.response.code).to.be.oneOf([200, 201]));",
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set('token', body.token);",
+                  "pm.test('token stored', () => pm.expect(body.token).to.be.a('string'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sections",
+      "description": "Admins read sections; only superadmin may create / update / delete them and change the layout.",
+      "item": [
+        {
+          "name": "List sections",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sections",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sections"]
+            }
+          }
+        },
+        {
+          "name": "Get section",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sections/{{sectionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sections", "{{sectionId}}"]
+            }
+          }
+        },
+        {
+          "name": "Create section (superadmin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('201 created', () => pm.response.to.have.status(201));",
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set('sectionId', body.id);",
+                  "pm.collectionVariables.set('sectionSlug', body.slug);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"slug\": \"news\",\n  \"name\": { \"hy\": \"Նորություններ\", \"ru\": \"Новости\", \"en\": \"News\" },\n  \"isPublic\": true,\n  \"icon\": \"newspaper\",\n  \"displayOrder\": 0,\n  \"layout\": {\n    \"blocks\": [\n      { \"type\": \"heading\" },\n      { \"type\": \"text\" }\n    ]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sections",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sections"]
+            }
+          }
+        },
+        {
+          "name": "Update section layout (superadmin)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"layout\": {\n    \"blocks\": [\n      { \"type\": \"heading\" },\n      { \"type\": \"richText\" },\n      { \"type\": \"image\" }\n    ]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sections/{{sectionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sections", "{{sectionId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete section (superadmin)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sections/{{sectionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sections", "{{sectionId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Entries (universal dispatcher)",
+      "description": "Every section is exposed at `/api/:sectionSlug`. GET honours `section.isPublic` and only returns published entries to anonymous callers; mutations always require admin.",
+      "item": [
+        {
+          "name": "List entries (public)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/{{sectionSlug}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{sectionSlug}}"]
+            }
+          }
+        },
+        {
+          "name": "List entries (admin, drafts)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/{{sectionSlug}}?status=draft",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{sectionSlug}}"],
+              "query": [{ "key": "status", "value": "draft" }]
+            }
+          }
+        },
+        {
+          "name": "List entries (single locale)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/{{sectionSlug}}?lang=hy",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{sectionSlug}}"],
+              "query": [{ "key": "lang", "value": "hy" }]
+            }
+          }
+        },
+        {
+          "name": "Create entry (admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('201 created', () => pm.response.to.have.status(201));",
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set('entryId', body.id);",
+                  "pm.test('starts as draft', () => pm.expect(body.status).to.eql('draft'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"title\": { \"hy\": \"Վերնագիր\", \"ru\": \"Заголовок\", \"en\": \"Title\" },\n    \"body\": \"<p>Hello world</p>\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/{{sectionSlug}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{sectionSlug}}"]
+            }
+          }
+        },
+        {
+          "name": "Get entry detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/{{sectionSlug}}/{{entryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{sectionSlug}}", "{{entryId}}"]
+            }
+          }
+        },
+        {
+          "name": "Update entry (admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"title\": { \"hy\": \"Նոր վերնագիր\", \"ru\": \"Новый заголовок\", \"en\": \"New title\" },\n    \"body\": \"<p>Edited</p>\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/{{sectionSlug}}/{{entryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{sectionSlug}}", "{{entryId}}"]
+            }
+          }
+        },
+        {
+          "name": "Publish entry (admin)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/{{sectionSlug}}/{{entryId}}/publish",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{sectionSlug}}", "{{entryId}}", "publish"]
+            }
+          }
+        },
+        {
+          "name": "Delete entry (admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/{{sectionSlug}}/{{entryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "{{sectionSlug}}", "{{entryId}}"]
+            }
+          }
+        },
+        {
+          "name": "All entries across sections (admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/entries",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "entries"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Layout Templates",
+      "description": "Reusable layout snapshots. Superadmin only.",
+      "item": [
+        {
+          "name": "List templates",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/layout-templates",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "layout-templates"]
+            }
+          }
+        },
+        {
+          "name": "Create template",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('201 created', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('templateId', pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Blog post\",\n  \"description\": \"heading + rich text + image\",\n  \"layout\": {\n    \"blocks\": [\n      { \"type\": \"heading\" },\n      { \"type\": \"richText\" },\n      { \"type\": \"image\" }\n    ]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/layout-templates",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "layout-templates"]
+            }
+          }
+        },
+        {
+          "name": "Create template from section",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sectionId\": \"{{sectionId}}\",\n  \"name\": \"News layout snapshot\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/layout-templates/from-section",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "layout-templates", "from-section"]
+            }
+          }
+        },
+        {
+          "name": "Update template",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Blog post (v2)\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/layout-templates/{{templateId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "layout-templates", "{{templateId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete template",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/layout-templates/{{templateId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "layout-templates", "{{templateId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Uploads",
+      "description": "Multipart upload (admin) + public fetch. Limit comes from `MAX_UPLOAD_MB`.",
+      "item": [
+        {
+          "name": "Upload file (admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('201 created', () => pm.response.to.have.status(201));",
+                  "pm.test('returns url', () => pm.expect(pm.response.json().url).to.match(/^\\/api\\/uploads\\//));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [{ "key": "file", "type": "file", "src": [] }]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/uploads",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "uploads"]
+            },
+            "description": "Pick a file in the form-data `file` field before sending."
+          }
+        },
+        {
+          "name": "Fetch file",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/uploads/REPLACE_WITH_FILENAME",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "uploads", "REPLACE_WITH_FILENAME"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

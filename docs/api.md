@@ -3,6 +3,8 @@
 Base URL: `/api` (Nginx routes it to the NestJS server).
 All non-public endpoints require `Authorization: Bearer <jwt>`.
 
+> 📮 A ready-to-import Postman collection + environment live in [`docs/postman/`](postman/). See [postman.md](postman.md) for the import/run flow. CORS is enabled globally (`NestFactory.create(AppModule, { cors: true })`), so the API is reachable from any origin during development.
+
 ## Error contract
 
 HTTP `400` (validation) and `409`/`404` semantic errors return:
@@ -56,7 +58,89 @@ Returns the authenticated user.
 
 ---
 
+## Sections (the headline feature)
+
+A **section** is a content type (`news`, `products`, …). It owns a slug, a multilingual name, an `isPublic` flag, and a single `layout` (the block tree the page-builder edits). Creating a section makes it appear in the sidebar and exposes it through the universal entry dispatcher below.
+
+| Method | Path                | Min role     | Body / notes                                            |
+|--------|---------------------|--------------|---------------------------------------------------------|
+| GET    | `/api/sections`     | `admin`      | List all sections                                       |
+| GET    | `/api/sections/:id` | `admin`      | One section                                             |
+| POST   | `/api/sections`     | `superadmin` | `{ slug, name, layout, isPublic?, icon?, displayOrder? }` |
+| PATCH  | `/api/sections/:id` | `superadmin` | Partial; change layout here                             |
+| DELETE | `/api/sections/:id` | `superadmin` | `204`; **cascades** to all entries in the section       |
+
+- `slug` must match `^[a-z][a-z0-9-]*$` and is checked against a reserved list (`auth`, `users`, `sections`, `entries`, `uploads`, …). A reserved slug returns `409 { "errors": { "slug": "reserved" } }`.
+- `name` is multilingual: `{ "hy": "...", "ru": "...", "en": "..." }`.
+- `layout` is opaque `jsonb` — the block tree produced by the section-builder.
+- **Layout migrations** are additive (spec decision A): editing a section's layout never touches existing entry `data`. Removed fields are soft-hidden, not deleted.
+
+---
+
+## Entries — universal dispatcher
+
+Every section is served at `/api/:sectionSlug`. This controller is registered **after** all static `/api/*` controllers but **before** the dynamic-endpoint catch-all, so it never shadows `/api/auth`, `/api/sections`, etc.
+
+| Method | Path                          | Auth                                  | Returns                                  |
+|--------|-------------------------------|---------------------------------------|------------------------------------------|
+| GET    | `/api/:slug`                  | public if `isPublic`, else JWT        | List of entries                          |
+| GET    | `/api/:slug/:id`              | public if `isPublic`, else JWT        | One entry                                |
+| POST   | `/api/:slug`                  | JWT + `admin`                         | Created entry (`status: draft`)          |
+| PATCH  | `/api/:slug/:id`              | JWT + `admin`                         | Updated entry                            |
+| POST   | `/api/:slug/:id/publish`      | JWT + `admin`                         | Entry with `status: published`           |
+| DELETE | `/api/:slug/:id`              | JWT + `admin`                         | `204`                                    |
+
+**Drafts & visibility** (spec decision B):
+
+- New entries start as `draft`. Anonymous GET returns **only published** entries.
+- An admin (JWT) sees both; filter with `?status=draft` or `?status=published`.
+- `POST /api/:slug/:id/publish` (or `PATCH … { "status": "published" }`) stamps `publishedAt` and exposes the entry publicly.
+
+**Locale collapsing** (spec decision 4): add `?lang=hy|ru|en` to any GET to flatten every multilingual field to that single locale. Without it the full `{ hy, ru, en }` object is returned. An unknown code → `400 { "errors": { "lang": "invalidLocale" } }`.
+
+`POST` / `PATCH` body: `{ "data": { ... }, "status"?: "draft" | "published" }`. `data` is free-form `jsonb` keyed by the section's field keys; multilingual fields are nested `{ hy, ru, en }` objects.
+
+Serialized entry shape:
+
+```jsonc
+{
+  "id": "uuid",
+  "sectionId": "uuid",
+  "sectionSlug": "news",
+  "status": "published",
+  "data": { /* field values, or collapsed locale when ?lang= */ },
+  "publishedAt": "2026-05-30T…Z" /* or null */,
+  "createdAt": "…",
+  "updatedAt": "…"
+}
+```
+
+Edge cases: unknown slug → `404`; non-UUID `:id` → `400`; private section without JWT → `401`; private section with a non-admin token → `403`.
+
+### `GET /api/entries` (admin+)
+
+Cross-section list of every entry (used by the admin tables view), independent of the per-slug dispatcher.
+
+---
+
+## Layout templates (superadmin)
+
+Reusable layout snapshots so a new section can start from an existing structure (spec decision D).
+
+| Method | Path                                  | Body                                  |
+|--------|---------------------------------------|---------------------------------------|
+| GET    | `/api/layout-templates`               | List                                  |
+| GET    | `/api/layout-templates/:id`           | One                                   |
+| POST   | `/api/layout-templates`               | `{ name, description?, layout }`      |
+| POST   | `/api/layout-templates/from-section`  | `{ sectionId, name, description? }` — snapshots that section's current layout |
+| PATCH  | `/api/layout-templates/:id`           | Partial                               |
+| DELETE | `/api/layout-templates/:id`           | `204`                                 |
+
+---
+
 ## Form schemas (admin+)
+
+> Legacy builder utility — now lives under **Settings**. Superseded by Sections for content modelling.
 
 Stored builder output (a list of `FieldDef`).
 
