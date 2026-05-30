@@ -21,7 +21,8 @@ export type FieldType =
   | 'richtext'
   | 'image'
   | 'file'
-  | 'button';
+  | 'button'
+  | 'repeater';
 
 export interface SelectOption {
   value: string;
@@ -45,6 +46,8 @@ export interface FieldDef {
   /** Button-only props */
   buttonAction?: 'submit' | 'reset';
   buttonVariant?: 'primary' | 'outlined' | 'text';
+  /** Repeater-only: defines the fields for each row in the list */
+  subFields?: FieldDef[];
 }
 
 export interface FormSchema {

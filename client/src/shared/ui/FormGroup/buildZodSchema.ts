@@ -15,6 +15,12 @@ export function buildZodSchema(fields: FieldDef[]) {
   for (const f of fields) {
     if (f.type === 'button') continue;
 
+    if (f.type === 'repeater') {
+      const rowSchema = buildZodSchema(f.subFields ?? []);
+      shape[f.name] = z.array(rowSchema).optional();
+      continue;
+    }
+
     if (f.type === 'checkbox' || f.type === 'switch') {
       shape[f.name] = f.required
         ? z.literal(true, { message: 'required' })
@@ -79,6 +85,10 @@ export function buildDefaultValues(fields: FieldDef[]): Record<string, unknown> 
   const values: Record<string, unknown> = {};
   for (const f of fields) {
     if (f.type === 'button') continue;
+    if (f.type === 'repeater') {
+      values[f.name] = [];
+      continue;
+    }
     if (f.type === 'checkbox' || f.type === 'switch') {
       values[f.name] = false;
     } else if (f.multilingual) {

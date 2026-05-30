@@ -103,5 +103,21 @@ function FieldPreview({ field }: { field: FieldBlock['props']['field'] }) {
           {field.label}
         </button>
       );
+    case 'repeater':
+      return (
+        <div className="sb-field__preview sb-field__preview--repeater">
+          <span className="sb-field__repeater-icon">≡</span>
+          <span>Repeater</span>
+          {(field.subFields ?? []).length > 0 && (
+            <div className="sb-field__subfields">
+              {(field.subFields ?? []).map((sf) => (
+                <span key={sf.id} className="sb-field__subflag">
+                  {sf.name}: {sf.type}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      );
   }
 }

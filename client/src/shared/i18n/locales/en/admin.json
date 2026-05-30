@@ -113,6 +113,14 @@
       "imageDesktop": "Desktop Image (required)",
       "imageMobile": "Mobile Image (optional)",
       "activeSlideSettings": "Slide #{{index}} Settings"
+    },
+    "repeater": {
+      "subFields": "Sub-fields",
+      "addSubField": "+ Add sub-field",
+      "noSubFields": "No sub-fields yet.",
+      "subFieldName": "name",
+      "subFieldLabel": "Label",
+      "subFieldType": "Type"
     }
   },
   "formBuilder": {
@@ -128,7 +136,8 @@
       "richtext": "Rich text",
       "image": "Image",
       "file": "File",
-      "button": "Button"
+      "button": "Button",
+      "repeater": "Repeater / List"
     },
     "props": {
       "label": "Label",
@@ -138,6 +147,14 @@
       "multilingual": "Multilingual",
       "options": "Options"
     }
+  },
+  "repeater": {
+    "addRow": "+ Add row",
+    "removeRow": "Remove row",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "empty": "No rows yet. Click \"+ Add row\" to begin.",
+    "row": "Row {{index}}"
   },
   "table": {
     "addRow": "Add row",

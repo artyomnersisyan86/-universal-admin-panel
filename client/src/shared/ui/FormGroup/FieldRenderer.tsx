@@ -8,16 +8,25 @@ import { ImageUpload } from '../ImageUpload';
 import { FileUpload } from '../FileUpload';
 import { LanguageTabs } from '../LanguageTabs';
 import { Button } from '../Button';
+import { RepeaterField } from './RepeaterField';
 
 export interface FieldRendererProps {
   field: FieldDef;
   /** Optional uploader passed down for image/file fields. */
   uploadFn?: (file: File) => Promise<string>;
+  /**
+   * When rendering inside a RepeaterField row, pass the dot-path prefix
+   * so that controllers register under the correct array path.
+   * e.g. namePrefix="items.0" + field.name="title" → "items.0.title"
+   */
+  namePrefix?: string;
 }
 
 /** Renders a single FieldDef using react-hook-form's Controller. */
-export function FieldRenderer({ field, uploadFn }: FieldRendererProps) {
+export function FieldRenderer({ field, uploadFn, namePrefix }: FieldRendererProps) {
   const { control, formState } = useFormContext();
+
+  const controlName = namePrefix ? `${namePrefix}.${field.name}` : field.name;
   const errorForField = formState.errors[field.name];
 
   if (field.type === 'button') {
@@ -31,12 +40,22 @@ export function FieldRenderer({ field, uploadFn }: FieldRendererProps) {
     );
   }
 
+  if (field.type === 'repeater') {
+    return (
+      <RepeaterField
+        field={field as FieldDef & { type: 'repeater' }}
+        name={controlName}
+        uploadFn={uploadFn}
+      />
+    );
+  }
+
   // Boolean fields render inline (label next to control), no FieldShell wrapping.
   if (field.type === 'checkbox' || field.type === 'switch') {
     return (
       <Controller
         control={control}
-        name={field.name}
+        name={controlName}
         render={({ field: ctrl }) => (
           <label
             className={
@@ -70,7 +89,7 @@ export function FieldRenderer({ field, uploadFn }: FieldRendererProps) {
           render={(lang: SupportedLanguage) => (
             <Controller
               control={control}
-              name={`${field.name}.${lang}`}
+              name={`${controlName}.${lang}`}
               render={({ field: ctrl, fieldState }) => (
                 <div>
                   {renderInputForType(field, ctrl, fieldState.invalid, uploadFn)}
@@ -91,7 +110,7 @@ export function FieldRenderer({ field, uploadFn }: FieldRendererProps) {
   return (
     <Controller
       control={control}
-      name={field.name}
+      name={controlName}
       render={({ field: ctrl, fieldState }) => (
         <FieldShell
           label={field.label}

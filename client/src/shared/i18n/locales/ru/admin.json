@@ -113,6 +113,14 @@
       "imageDesktop": "Изображение (десктоп, обязательное)",
       "imageMobile": "Изображение (мобильное, опциональное)",
       "activeSlideSettings": "Настройки слайда №{{index}}"
+    },
+    "repeater": {
+      "subFields": "Вложенные поля",
+      "addSubField": "+ Добавить поле",
+      "noSubFields": "Вложенных полей пока нет.",
+      "subFieldName": "имя",
+      "subFieldLabel": "Подпись",
+      "subFieldType": "Тип"
     }
   },
   "formBuilder": {
@@ -128,7 +136,8 @@
       "richtext": "Rich text",
       "image": "Изображение",
       "file": "Файл",
-      "button": "Кнопка"
+      "button": "Кнопка",
+      "repeater": "Повторяемый список"
     },
     "props": {
       "label": "Подпись",
@@ -138,6 +147,14 @@
       "multilingual": "Многоязычное",
       "options": "Опции"
     }
+  },
+  "repeater": {
+    "addRow": "+ Добавить строку",
+    "removeRow": "Удалить строку",
+    "moveUp": "Вверх",
+    "moveDown": "Вниз",
+    "empty": "Строк пока нет. Нажмите «+ Добавить строку», чтобы начать.",
+    "row": "Строка {{index}}"
   },
   "table": {
     "addRow": "Добавить строку",

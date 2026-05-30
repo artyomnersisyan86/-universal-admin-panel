@@ -126,3 +126,31 @@
   pointer-events: none;
   opacity: 0.7;
 }
+
+.sb-field__preview--repeater {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-height: 40px;
+  align-items: flex-start;
+}
+
+.sb-field__repeater-icon {
+  font-size: 1.1em;
+  margin-right: var(--space-1);
+}
+
+.sb-field__subfields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.sb-field__subflag {
+  font-family: var(--font-family-mono);
+  font-size: 0.72em;
+  padding: 2px var(--space-1);
+  background-color: var(--bg-elev-2);
+  border-radius: var(--radius-sm);
+  color: var(--color-primary);
+}

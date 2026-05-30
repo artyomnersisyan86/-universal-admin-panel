@@ -113,6 +113,14 @@
       "imageDesktop": "Նկար (դեսքթոփ, պարտադիր)",
       "imageMobile": "Նկար (մոբայլ, օպցիոնալ)",
       "activeSlideSettings": "Սլայդ №{{index}} կարգավորումներ"
+    },
+    "repeater": {
+      "subFields": "Ենթադաշտեր",
+      "addSubField": "+ Ավելացնել ենթադաշտ",
+      "noSubFields": "Ենթադաշտեր դեռ չկան։",
+      "subFieldName": "անուն",
+      "subFieldLabel": "Պիտակ",
+      "subFieldType": "Տեսակ"
     }
   },
   "formBuilder": {
@@ -128,7 +136,8 @@
       "richtext": "Հարուստ տեքստ",
       "image": "Նկար",
       "file": "Ֆայլ",
-      "button": "Կոճակ"
+      "button": "Կոճակ",
+      "repeater": "Կրկնվող ցուցակ"
     },
     "props": {
       "label": "Պիտակ",
@@ -138,6 +147,14 @@
       "multilingual": "Բազմալեզու",
       "options": "Տարբերակներ"
     }
+  },
+  "repeater": {
+    "addRow": "+ Ավելացնել տող",
+    "removeRow": "Հեռացնել տողը",
+    "moveUp": "Վեր",
+    "moveDown": "Վար",
+    "empty": "Տողեր դեռ չկան։ Սեղմեք «+ Ավելացնել տող»՝ սկսելու համար։",
+    "row": "Տող {{index}}"
   },
   "table": {
     "addRow": "Ավելացնել տող",
