@@ -24,6 +24,7 @@
   cursor: grab;
   font-size: 14px;
   user-select: none;
+  touch-action: none;
   transition: border-color var(--transition-fast), background-color var(--transition-fast);
 }
 

@@ -7,13 +7,27 @@ import './TopBar.css';
 
 const LANGS = ['hy', 'ru', 'en'] as const;
 
-export function TopBar() {
+interface TopBarProps {
+  navOpen: boolean;
+  onToggleNav: () => void;
+}
+
+export function TopBar({ navOpen, onToggleNav }: TopBarProps) {
   const { theme, toggleTheme } = useTheme();
   const { i18n, t } = useTranslation('common');
   const { user, logout } = useAuth();
 
   return (
     <header className="topbar">
+      <button
+        type="button"
+        className="topbar__nav-toggle"
+        onClick={onToggleNav}
+        aria-label={t('app.toggleNav')}
+        aria-expanded={navOpen}
+      >
+        {navOpen ? '✕' : '☰'}
+      </button>
       <Typography variant="h5" className="topbar__brand">
         {t('app.title')}
       </Typography>

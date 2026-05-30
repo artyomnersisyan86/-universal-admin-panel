@@ -1,7 +1,7 @@
 .admin-layout {
   display: grid;
-  grid-template-columns: 240px 1fr;
-  grid-template-rows: 56px 1fr;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  grid-template-rows: var(--topbar-height) 1fr;
   grid-template-areas:
     'topbar topbar'
     'sidebar main';
@@ -16,13 +16,45 @@
   background-color: var(--bg);
 }
 
+/* Tablet / mobile: the sidebar becomes an off-canvas drawer that slides in
+   over the content; the grid collapses to a single column. */
 @media (max-width: 768px) {
   .admin-layout {
     grid-template-columns: 1fr;
-    grid-template-rows: 56px auto 1fr;
+    grid-template-rows: var(--topbar-height) 1fr;
     grid-template-areas:
       'topbar'
-      'sidebar'
       'main';
+  }
+
+  .admin-layout__main {
+    padding: var(--space-4);
+  }
+
+  .admin-layout__overlay {
+    position: fixed;
+    inset: var(--topbar-height) 0 0 0;
+    background-color: var(--overlay);
+    border: none;
+    padding: 0;
+    margin: 0;
+    z-index: 15;
+    cursor: pointer;
+    animation: admin-layout-overlay-in var(--transition-base);
+  }
+}
+
+@keyframes admin-layout-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-layout__main {
+    padding: var(--space-3);
   }
 }

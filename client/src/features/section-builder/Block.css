@@ -35,6 +35,7 @@
 .sb-block__handle {
   cursor: grab;
   user-select: none;
+  touch-action: none;
   color: var(--fg-muted);
   font-size: 1.1em;
   letter-spacing: -2px;

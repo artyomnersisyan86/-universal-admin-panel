@@ -1,14 +1,8 @@
 import { useState } from 'react';
-import {
-  DndContext,
-  type DragEndEvent,
-  PointerSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
+import { DndContext, type DragEndEvent, closestCenter } from '@dnd-kit/core';
 import { SortableContext, arrayMove, rectSortingStrategy } from '@dnd-kit/sortable';
 import { useTranslation } from 'react-i18next';
+import { useBuilderSensors } from '@shared/lib/useBuilderSensors';
 import { Typography } from '@shared/ui/Typography';
 import { Button } from '@shared/ui/Button';
 import { Widget } from './Widget';
@@ -48,7 +42,7 @@ export function Dashboard() {
   const { t } = useTranslation('admin');
   const [widgets, setWidgets] = useState<DashboardWidget[]>(INITIAL);
 
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }));
+  const sensors = useBuilderSensors();
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;

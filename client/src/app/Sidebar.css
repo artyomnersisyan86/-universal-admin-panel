@@ -5,6 +5,27 @@
   padding: var(--space-4) var(--space-3);
 }
 
+/* Off-canvas drawer on small screens; slides in when the layout has the
+   `--nav-open` modifier. Fixed positioning takes it out of the grid flow. */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: var(--topbar-height);
+    left: 0;
+    bottom: 0;
+    width: min(80vw, var(--sidebar-width));
+    transform: translateX(-100%);
+    transition: transform var(--transition-base);
+    overflow-y: auto;
+    z-index: 20;
+  }
+
+  .admin-layout--nav-open .sidebar {
+    transform: translateX(0);
+    box-shadow: var(--shadow-lg);
+  }
+}
+
 .sidebar__nav {
   display: flex;
   flex-direction: column;

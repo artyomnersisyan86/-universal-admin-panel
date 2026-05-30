@@ -1,13 +1,8 @@
 import { useState } from 'react';
-import {
-  DndContext,
-  type DragEndEvent,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
+import { DndContext, type DragEndEvent } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
 import { useTranslation } from 'react-i18next';
+import { useBuilderSensors } from '@shared/lib/useBuilderSensors';
 import { Typography } from '@shared/ui/Typography';
 import { Button } from '@shared/ui/Button';
 import { FormGroup } from '@shared/ui/FormGroup';
@@ -24,7 +19,7 @@ export function FormBuilder() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
 
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }));
+  const sensors = useBuilderSensors();
 
   const selected = fields.find((f) => f.id === selectedId) ?? null;
 

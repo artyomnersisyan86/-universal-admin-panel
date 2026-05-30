@@ -23,6 +23,8 @@
   cursor: grab;
   color: var(--fg-muted);
   font-size: 14px;
+  user-select: none;
+  touch-action: none;
 }
 
 .widget__handle:active {

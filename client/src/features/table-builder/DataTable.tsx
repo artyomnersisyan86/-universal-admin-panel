@@ -1,12 +1,5 @@
 import { useMemo, useState } from 'react';
-import {
-  DndContext,
-  type DragEndEvent,
-  PointerSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
+import { DndContext, type DragEndEvent, closestCenter } from '@dnd-kit/core';
 import {
   SortableContext,
   arrayMove,
@@ -17,6 +10,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { restrictToHorizontalAxis, restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { useTranslation } from 'react-i18next';
+import { useBuilderSensors } from '@shared/lib/useBuilderSensors';
 import { Button } from '@shared/ui/Button';
 import { TextInput } from '@shared/ui/TextInput';
 import type { TableColumnDef, TableRow } from './types';
@@ -60,7 +54,7 @@ export function DataTable({
   const [showVisibility, setShowVisibility] = useState(false);
   const [colSearch, setColSearch] = useState<Record<string, string>>({});
 
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }));
+  const sensors = useBuilderSensors();
 
   const visibleColumns = useMemo(() => columns.filter((c) => !c.hidden), [columns]);
 

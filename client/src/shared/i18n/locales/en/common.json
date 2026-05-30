@@ -15,6 +15,7 @@
     "error": "Something went wrong",
     "copyJson": "Copy JSON",
     "search": "Search",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "toggleNav": "Toggle navigation"
   }
 }

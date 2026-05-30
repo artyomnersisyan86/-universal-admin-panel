@@ -1,12 +1,7 @@
 import { useEffect, useState } from 'react';
-import {
-  DndContext,
-  type DragEndEvent,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
+import { DndContext, type DragEndEvent } from '@dnd-kit/core';
 import { useTranslation } from 'react-i18next';
+import { useBuilderSensors } from '@shared/lib/useBuilderSensors';
 import { Typography } from '@shared/ui/Typography';
 import { Button } from '@shared/ui/Button';
 import type { BlockType, Section } from '@shared/types';
@@ -54,9 +49,7 @@ export function SectionBuilder({ section }: SectionBuilderProps) {
 
   const updateMutation = useUpdateSection(section.id);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
-  );
+  const sensors = useBuilderSensors();
 
   // Re-sync local state when the server payload changes (e.g. navigating
   // between sections without unmounting).

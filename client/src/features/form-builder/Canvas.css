@@ -59,6 +59,7 @@
   color: var(--fg-muted);
   font-size: 14px;
   user-select: none;
+  touch-action: none;
 }
 
 .canvas__handle:active {
