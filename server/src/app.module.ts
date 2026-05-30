@@ -26,7 +26,6 @@ import { EntriesModule } from './modules/entries/entries.module';
     DashboardModule,
     UploadsModule,
     HealthModule,
-    SeedModule,
     // Static section/template CRUD — own fixed paths.
     SectionsModule,
     LayoutTemplatesModule,
@@ -36,6 +35,10 @@ import { EntriesModule } from './modules/entries/entries.module';
     EntriesModule,
     // DynamicEndpointsModule registers a catch-all controller — keep last.
     DynamicEndpointsModule,
+    // SeedModule has no controllers but imports Sections/Entries modules; it
+    // must come AFTER them so it reuses their already-registered controllers
+    // instead of pulling the `:sectionSlug` catch-all in early.
+    SeedModule,
   ],
 })
 export class AppModule {}

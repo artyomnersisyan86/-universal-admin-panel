@@ -25,6 +25,7 @@ export async function createE2EApp(): Promise<{
   process.env.JWT_SECRET = 'test-secret';
   process.env.SEED_SUPERADMIN_EMAIL = 'super@test.local';
   process.env.SEED_SUPERADMIN_PASSWORD = 'super-pass';
+  process.env.SEED_DEMO_CONTENT = 'false';
 
   const moduleRef = await Test.createTestingModule({
     imports: [AppModule],

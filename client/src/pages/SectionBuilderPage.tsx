@@ -19,7 +19,7 @@ export function SectionBuilderPage() {
     return (
       <div>
         <Typography variant="body">⚠ {t('admin:sections.notFound')}</Typography>
-        <Link to="/sections">
+        <Link to="/settings/sections">
           <Button variant="text">{t('admin:sections.backToList')}</Button>
         </Link>
       </div>
@@ -28,7 +28,7 @@ export function SectionBuilderPage() {
 
   return (
     <div>
-      <Link to="/sections" className="section-builder__back">
+      <Link to="/settings/sections" className="section-builder__back">
         <Button variant="text" size="small">
           ← {t('admin:sections.backToList')}
         </Button>

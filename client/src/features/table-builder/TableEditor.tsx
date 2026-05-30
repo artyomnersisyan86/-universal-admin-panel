@@ -77,7 +77,7 @@ export function TableEditor({ tableId }: Props) {
     return (
       <div>
         <p style={{ color: 'var(--danger, #c0392b)' }}>{error}</p>
-        <Button variant="outlined" onClick={() => navigate('/tables')}>
+        <Button variant="outlined" onClick={() => navigate('/settings/tables')}>
           ← {t('admin:tables.backToList')}
         </Button>
       </div>
@@ -182,7 +182,7 @@ export function TableEditor({ tableId }: Props) {
         }}
       >
         <div>
-          <Button variant="text" size="small" onClick={() => navigate('/tables')}>
+          <Button variant="text" size="small" onClick={() => navigate('/settings/tables')}>
             ← {t('admin:nav.tables')}
           </Button>
           <Typography variant="h2" className="page-title">

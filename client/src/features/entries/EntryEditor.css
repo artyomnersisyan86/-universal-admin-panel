@@ -1,0 +1,73 @@
+.entry-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.entry-editor__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.entry-editor__sub {
+  display: block;
+  margin-top: var(--space-1);
+  color: var(--fg-muted);
+}
+
+.entry-editor__status {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.entry-editor__status--draft {
+  color: var(--fg-muted);
+}
+
+.entry-editor__status--published {
+  color: var(--color-primary);
+}
+
+.entry-editor__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.entry-editor__saved {
+  color: var(--fg-muted);
+}
+
+.entry-editor__error {
+  color: var(--color-error);
+}
+
+.entry-editor__canvas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-elev);
+}
+
+.entry-editor__empty {
+  color: var(--fg-muted);
+  text-align: center;
+  padding: var(--space-5) 0;
+}
+
+/* Live layout blocks — minimal wrapper; per-block style is applied inline. */
+.entry-block {
+  min-width: 0;
+}
+
+.entry-block--field {
+  width: 100%;
+}

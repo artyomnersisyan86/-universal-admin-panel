@@ -22,10 +22,14 @@ import { CreateSectionDto } from './dto/create-section.dto';
 import { UpdateSectionDto } from './dto/update-section.dto';
 
 @UseGuards(AuthGuard('jwt'), RolesGuard)
-@Roles(UserRole.SUPERADMIN)
+@Roles(UserRole.ADMIN)
 @Controller('sections')
 export class SectionsController {
   constructor(private readonly svc: SectionsService) {}
+
+  // Reads are available to admins — the sidebar and per-section content
+  // tables need the section list + layout. Mutations stay superadmin-only
+  // (method-level @Roles overrides the class default).
 
   @Get()
   list() {
@@ -38,11 +42,13 @@ export class SectionsController {
   }
 
   @Post()
+  @Roles(UserRole.SUPERADMIN)
   create(@Body() dto: CreateSectionDto, @CurrentUser() user: User) {
     return this.svc.create(dto, user.id);
   }
 
   @Patch(':id')
+  @Roles(UserRole.SUPERADMIN)
   update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() dto: UpdateSectionDto,
@@ -51,6 +57,7 @@ export class SectionsController {
   }
 
   @Delete(':id')
+  @Roles(UserRole.SUPERADMIN)
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.svc.remove(id);

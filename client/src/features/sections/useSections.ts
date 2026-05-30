@@ -19,6 +19,17 @@ export function useSection(id: string | undefined) {
   });
 }
 
+/**
+ * Resolve a section by its URL slug off the cached list — used by the content
+ * routes (`/c/:slug`), which only know the slug. Returns the same query state
+ * shape so callers can branch on loading/error/data.
+ */
+export function useSectionBySlug(slug: string | undefined) {
+  const list = useSectionsList();
+  const section = slug ? list.data?.find((s) => s.slug === slug) : undefined;
+  return { ...list, section } as typeof list & { section: typeof section };
+}
+
 export function useCreateSection() {
   const qc = useQueryClient();
   return useMutation({

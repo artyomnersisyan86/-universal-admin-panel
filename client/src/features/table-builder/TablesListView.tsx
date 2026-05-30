@@ -47,7 +47,7 @@ export function TablesListView() {
       });
       setNewName('');
       setCreating(false);
-      navigate(`/tables/${created.id}`);
+      navigate(`/settings/tables/${created.id}`);
     } catch (err) {
       setError(
         (err as { response?: { data?: { message?: string } } }).response?.data?.message ??
@@ -119,7 +119,7 @@ export function TablesListView() {
               <button
                 type="button"
                 className="tables-list__item-open"
-                onClick={() => navigate(`/tables/${tb.id}`)}
+                onClick={() => navigate(`/settings/tables/${tb.id}`)}
               >
                 <span className="tables-list__item-name">{tb.name}</span>
                 <span className="tables-list__item-meta">

@@ -18,7 +18,7 @@ export function SectionsList() {
   const [creating, setCreating] = useState(false);
 
   function openSection(s: Section) {
-    navigate(`/sections/${s.id}`);
+    navigate(`/settings/sections/${s.id}`);
   }
 
   async function handleDelete(s: Section) {
@@ -42,7 +42,7 @@ export function SectionsList() {
           onClose={() => setCreating(false)}
           onCreated={(id) => {
             setCreating(false);
-            navigate(`/sections/${id}`);
+            navigate(`/settings/sections/${id}`);
           }}
         />
       )}

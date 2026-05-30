@@ -7,6 +7,23 @@
     "apiBuilder": "API Builder",
     "settings": "Settings"
   },
+  "entries": {
+    "create": "+ New entry",
+    "empty": "No entries yet. Create the first record.",
+    "statusColumn": "Status",
+    "status": {
+      "draft": "Draft",
+      "published": "Published"
+    },
+    "save": "Save",
+    "publish": "Publish",
+    "editing": "Editing entry",
+    "creating": "New entry",
+    "confirmDelete": "Delete this entry?",
+    "backToList": "Back to list",
+    "notFound": "Entry not found",
+    "emptyLayout": "This section has no layout yet. A superadmin can design it in Settings → Sections."
+  },
   "sections": {
     "title": "Sections",
     "create": "+ New section",

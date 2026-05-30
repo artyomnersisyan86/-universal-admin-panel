@@ -11,6 +11,21 @@
   gap: var(--space-1);
 }
 
+/* Dynamic sections, set off from Dashboard / Settings by separators. */
+.sidebar__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: var(--space-2) 0;
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar__icon {
+  margin-right: var(--space-2);
+}
+
 .sidebar__link {
   display: block;
   padding: var(--space-2) var(--space-3);
