@@ -46,8 +46,11 @@ export function buildZodSchema(fields: FieldDef[]) {
 
     let s: ZodTypeAny;
     if (f.type === 'image' || f.type === 'file') {
-      s = z.string().url().or(z.string().length(0));
-      if (f.required) s = z.string().min(1, { message: 'required' });
+      // Values are server-relative URLs like /api/uploads/filename — not absolute URLs,
+      // so z.string().url() would reject them. Accept any string; required just needs min(1).
+      s = z.string();
+      if (f.required) s = (s as z.ZodString).min(1, { message: 'required' });
+      else s = (s as z.ZodString).optional();
     } else {
       s = z.string();
       if (f.required) s = (s as z.ZodString).min(1, { message: 'required' });

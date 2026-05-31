@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { TextInput } from '@shared/ui/TextInput';
 import { Select } from '@shared/ui/Select';
 import { FieldShell } from '@shared/ui/_FieldShell';
-import type { FieldBlock, FieldDef, FieldType } from '@shared/types';
+import type { FieldBlock, FieldDef, FieldType, SelectOption } from '@shared/types';
 
 interface Props {
   block: FieldBlock;
@@ -114,26 +114,10 @@ export function FieldProps({ block, onPatch }: Props) {
       )}
 
       {f.type === 'select' && (
-        <FieldShell label={t('admin:formBuilder.props.options')}>
-          <textarea
-            className="property-panel__textarea"
-            rows={5}
-            value={(f.options ?? []).map((o) => `${o.value}|${o.label}`).join('\n')}
-            onChange={(e) =>
-              setField({
-                options: e.target.value
-                  .split('\n')
-                  .map((line) => line.trim())
-                  .filter(Boolean)
-                  .map((line) => {
-                    const [value, label] = line.split('|');
-                    return { value: value ?? '', label: label ?? value ?? '' };
-                  }),
-              })
-            }
-            placeholder="value|label"
-          />
-        </FieldShell>
+        <SelectOptionsEditor
+          options={f.options ?? []}
+          onChange={(options) => setField({ options })}
+        />
       )}
 
       {f.type === 'repeater' && (
@@ -232,6 +216,62 @@ function SubFieldsEditor({ subFields, onChange }: SubFieldsEditorProps) {
         onClick={addSubField}
       >
         {t('sectionBuilder.repeater.addSubField')}
+      </button>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Select options editor — inline rows instead of raw "value|label" textarea
+// ---------------------------------------------------------------------------
+
+interface SelectOptionsEditorProps {
+  options: SelectOption[];
+  onChange: (options: SelectOption[]) => void;
+}
+
+function SelectOptionsEditor({ options, onChange }: SelectOptionsEditorProps) {
+  const { t } = useTranslation('admin');
+
+  function addOption() {
+    onChange([...options, { value: `opt${options.length + 1}`, label: `Option ${options.length + 1}` }]);
+  }
+
+  function removeOption(idx: number) {
+    onChange(options.filter((_, i) => i !== idx));
+  }
+
+  function patchOption(idx: number, patch: Partial<SelectOption>) {
+    onChange(options.map((o, i) => (i === idx ? { ...o, ...patch } : o)));
+  }
+
+  return (
+    <div className="select-opts-editor">
+      <span className="sub-fields-editor__title">{t('admin:formBuilder.props.options')}</span>
+      {options.map((opt, idx) => (
+        <div key={idx} className="select-opts-editor__row">
+          <TextInput
+            placeholder="value"
+            value={opt.value}
+            onChange={(e) => patchOption(idx, { value: e.target.value.replace(/\s+/g, '_').toLowerCase() })}
+          />
+          <TextInput
+            placeholder="Label"
+            value={opt.label}
+            onChange={(e) => patchOption(idx, { label: e.target.value })}
+          />
+          <button
+            type="button"
+            className="sub-fields-editor__remove"
+            onClick={() => removeOption(idx)}
+            aria-label="Remove option"
+          >
+            ×
+          </button>
+        </div>
+      ))}
+      <button type="button" className="sub-fields-editor__add" onClick={addOption}>
+        + Add option
       </button>
     </div>
   );

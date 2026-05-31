@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@shared/ui/Typography';
 import { Button } from '@shared/ui/Button';
@@ -16,6 +16,14 @@ export function SectionsList() {
   const list = useSectionsList();
   const del = useDeleteSection();
   const [creating, setCreating] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get('create') === '1') {
+      setCreating(true);
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   function openSection(s: Section) {
     navigate(`/settings/sections/${s.id}`);

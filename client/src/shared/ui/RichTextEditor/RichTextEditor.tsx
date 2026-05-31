@@ -58,7 +58,7 @@ export function RichTextEditor({
   if (!editor) return null;
 
   return (
-    <div className={`rte${disabled ? ' rte--disabled' : ''}`}>
+    <div className={`rte${disabled ? ' rte--disabled' : ''}${editor.isEmpty ? ' rte--empty' : ''}`}>
       <Toolbar editor={editor} disabled={disabled} />
       <EditorContent editor={editor} />
     </div>

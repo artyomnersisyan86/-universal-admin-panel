@@ -97,8 +97,18 @@
   background: none;
 }
 
-.rte__content:empty::before {
+/* Placeholder when TipTap editor has no content (the div always has a <p> child,
+   so :empty never matches — use .rte--empty set by the component instead). */
+.rte--empty .rte__content::before {
   content: attr(aria-label);
   color: var(--fg-muted);
   font-style: italic;
+  pointer-events: none;
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+}
+
+.rte {
+  position: relative;
 }

@@ -43,6 +43,37 @@
   border-bottom: 1px solid var(--border);
 }
 
+.sidebar__group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-3) var(--space-1);
+}
+
+.sidebar__group-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--fg-muted);
+}
+
+.sidebar__add-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--fg-muted);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.sidebar__add-btn:hover {
+  background-color: var(--bg-elev-2);
+  color: var(--fg);
+}
+
 .sidebar__icon {
   margin-right: var(--space-2);
 }
