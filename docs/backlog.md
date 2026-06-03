@@ -45,10 +45,11 @@ These come from clicking through the live admin (News / Products sections).
 
 ## B. Spec divergences found during stage 6 review
 
-### B1 🔴 No Postgres migrations
+### ~~B1~~ ✅ No Postgres migrations — **DONE**
 
-- `server/src/migrations/` does not exist. Dev (SQLite) relies on `synchronize: true`; production (`docker-compose.prod.yml`, Postgres) has nothing to build the schema from.
-- **Action:** generate an initial migration covering `users`, `sections`, `entries`, `layout_templates` (+ legacy tables still in use) and wire `migration:run` into the prod startup/deploy.
+- `server/src/migrations/1780531200000-InitialSchema.ts` — initial migration covering all 9 tables: `users`, `sections`, `entries`, `layout_templates`, `form_schemas`, `table_definitions`, `table_rows`, `dashboard_widgets`, `dynamic_endpoints`.
+- `typeorm.config.ts` Postgres branch: `synchronize: false`, `migrationsRun: true`, `migrations: [path.join(__dirname, '..', 'migrations', '*.{ts,js}')]` — migrations auto-run on NestJS startup (no Dockerfile changes needed).
+- SQLite dev path unchanged (`synchronize: !isProd`).
 
 ### B2 🟡 `GET /api/:slug/:id` does not return `layout`
 
@@ -72,6 +73,6 @@ These come from clicking through the live admin (News / Products sections).
 ## Suggested order for the next stage
 
 1. ~~**A4** (repeater fields) + **A2** (discoverable section creation)~~ ✅ Done.
-2. **B1** (Postgres migrations) — before any production deploy.
+2. ~~**B1** (Postgres migrations)~~ ✅ Done.
 3. **A1 / A3** (table DnD + entry-editor reorder decision) — depends on the A3 design choice.
 4. **A5 / B2 / B3** — polish.

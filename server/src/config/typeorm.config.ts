@@ -18,7 +18,9 @@ export const typeOrmConfig: TypeOrmModuleAsyncOptions = {
         type: 'postgres',
         url: databaseUrl,
         autoLoadEntities: true,
-        synchronize: !isProd,
+        synchronize: false,
+        migrationsRun: true,
+        migrations: [path.join(__dirname, '..', 'migrations', '*.{ts,js}')],
         logging,
       };
     }
