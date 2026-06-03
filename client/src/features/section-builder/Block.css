@@ -62,6 +62,19 @@
   border-radius: var(--sb-radius, 0);
 }
 
+.sb-block__direction-badge {
+  display: inline-block;
+  margin-left: var(--space-1);
+  padding: 1px 5px;
+  background-color: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  font-size: 0.75em;
+  letter-spacing: 0;
+  text-transform: none;
+  vertical-align: middle;
+}
+
 .sb-typography__placeholder {
   color: var(--fg-muted);
   font-style: italic;

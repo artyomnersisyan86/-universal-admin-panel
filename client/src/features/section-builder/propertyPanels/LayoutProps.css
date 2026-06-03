@@ -1,0 +1,13 @@
+.layout-props__hint {
+  margin: 0;
+  padding: var(--space-2) var(--space-2);
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.layout-props__hint--row {
+  color: var(--color-primary);
+  font-style: normal;
+}

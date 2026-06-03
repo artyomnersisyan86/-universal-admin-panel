@@ -10,6 +10,7 @@ import type {
   SelectOption,
 } from '@shared/types';
 import { SpacingSelect } from './styleControls';
+import './LayoutProps.css';
 
 const DIRECTION_OPTIONS: SelectOption[] = [
   { value: 'column', label: 'column' },
@@ -68,6 +69,7 @@ export function LayoutProps({ layout, onChange }: LayoutPropsProps) {
   const { t } = useTranslation('admin');
   const l = layout ?? {};
   const set = (patch: Partial<FlexLayout>) => onChange({ ...l, ...patch });
+  const isRow = (l.direction ?? 'column') === 'row';
 
   return (
     <>
@@ -83,6 +85,9 @@ export function LayoutProps({ layout, onChange }: LayoutPropsProps) {
           <SpacingSelect value={l.gap} onChange={(gap) => set({ gap })} />
         </FieldShell>
       </div>
+      <p className={`layout-props__hint${isRow ? ' layout-props__hint--row' : ''}`}>
+        {isRow ? t('sectionBuilder.layout.rowHint') : t('sectionBuilder.layout.colHint')}
+      </p>
 
       <FieldShell label={t('sectionBuilder.layout.justify')}>
         <Select

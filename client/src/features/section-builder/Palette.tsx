@@ -22,9 +22,10 @@ export function Palette() {
 }
 
 function PaletteCard({ item, label }: { item: PaletteItem; label: string }) {
+  const cardId = item.preset ? `palette:${item.type}:${item.preset.direction}` : `palette:${item.type}`;
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: `palette:${item.type}`,
-    data: { source: 'palette', blockType: item.type },
+    id: cardId,
+    data: { source: 'palette', blockType: item.type, preset: item.preset },
   });
 
   return (

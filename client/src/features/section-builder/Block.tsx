@@ -7,7 +7,7 @@ import { TypographyBlockView } from './BlockRenderers/TypographyBlock';
 import { FieldBlockView } from './BlockRenderers/FieldBlock';
 import { ContainerBlockView } from './BlockRenderers/ContainerBlock';
 import { SliderBlockView } from './BlockRenderers/SliderBlock';
-import { bodyStyleVars, widthToCss, getResolvedStyle, getResolvedWidth } from './blockStyle';
+import { bodyStyleVars, widthToCss, getResolvedStyle, getResolvedWidth, getResolvedLayout } from './blockStyle';
 import { useBreakpoint } from './useBreakpoint';
 import './Block.css';
 
@@ -31,6 +31,8 @@ export function Block({ block, selectedId, onSelect, onRemove }: BlockProps) {
 
   const resolvedStyle = getResolvedStyle(block, breakpoint);
   const width = getResolvedWidth(block, breakpoint);
+  const isRowContainer =
+    block.type === 'container' && getResolvedLayout(block, breakpoint)?.direction === 'row';
   const style: CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -65,7 +67,10 @@ export function Block({ block, selectedId, onSelect, onRemove }: BlockProps) {
         >
           ⋮⋮
         </span>
-        <span className="sb-block__type">{block.type}</span>
+        <span className="sb-block__type">
+          {block.type}
+          {isRowContainer && <span className="sb-block__direction-badge">row</span>}
+        </span>
         <Button
           size="small"
           variant="text"

@@ -23,6 +23,7 @@ interface SectionBuilderProps {
 interface PaletteDragData {
   source: 'palette';
   blockType: BlockType;
+  preset?: { direction: 'row' };
 }
 
 interface BlockDragData {
@@ -77,7 +78,7 @@ export function SectionBuilder({ section }: SectionBuilderProps) {
     const data = active.data.current as ActiveData | undefined;
 
     if (isPaletteData(data)) {
-      const newBlock = makeBlock(data.blockType);
+      const newBlock = makeBlock(data.blockType, data.preset);
       if (target.parentId === null) {
         tree.insertAtIndex(target.index, newBlock);
       } else {

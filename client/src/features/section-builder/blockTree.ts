@@ -279,6 +279,15 @@ export function makeContainerBlock(): BlockNode {
   };
 }
 
+export function makeContainerRowBlock(): BlockNode {
+  return {
+    id: crypto.randomUUID(),
+    type: 'container',
+    props: { layout: { direction: 'row' } },
+    children: [],
+  };
+}
+
 export function makeSlide(): Slide {
   return {
     id: crypto.randomUUID(),
@@ -294,14 +303,14 @@ export function makeSliderBlock(): BlockNode {
   };
 }
 
-export function makeBlock(type: BlockType): BlockNode {
+export function makeBlock(type: BlockType, preset?: { direction: 'row' }): BlockNode {
   switch (type) {
     case 'typography':
       return makeTypographyBlock();
     case 'field':
       return makeFieldBlock();
     case 'container':
-      return makeContainerBlock();
+      return preset?.direction === 'row' ? makeContainerRowBlock() : makeContainerBlock();
     case 'slider':
       return makeSliderBlock();
   }

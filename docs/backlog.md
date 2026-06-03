@@ -33,11 +33,12 @@ These come from clicking through the live admin (News / Products sections).
 
 - `repeater` field type added to `FieldType`, section-builder property panel, `FieldRenderer`, and `EntryEditor`. Supports sub-fields (name/label/type), add/remove rows, move up/down.
 
-### A5 🟡 Easier flex / "several elements on one row"
+### ~~A5~~ ✅ Easier flex / "several elements on one row" — **DONE**
 
-- **Partially done:** `container` blocks support `layout.direction=row`, `gap`, `justify/align`, and field `width` (`100% | 50% | 33% | auto`) via `layoutToCss` / `widthCss` ([EntryEditor.tsx](../client/src/features/entries/EntryEditor.tsx), [propertyPanels/LayoutProps.tsx](../client/src/features/section-builder/propertyPanels/LayoutProps.tsx)).
-- **Gap is UX:** it is not obvious that to put elements on one row you must wrap them in a `container` set to `row`. Standalone (non-container) elements cannot go inline.
-- **Missing:** a quicker affordance — e.g. multi-select blocks → "group into row", or a drop-zone that creates a row container automatically; clearer hint in the palette/property panel.
+- **"Row (flex)" palette item** added — dragging it creates a `container` pre-configured with `direction=row`, no manual property-panel step required.
+- **Row badge** in the block header shows `row` in blue next to "container" whenever the resolved direction is row.
+- **Contextual hint** in the Layout property panel: switches between "children are side-by-side" (row) and "switch to row to place side-by-side" (column).
+- i18n: hy/ru/en keys added (`sectionBuilder.block.containerRow`, `sectionBuilder.layout.rowHint`, `sectionBuilder.layout.colHint`).
 
 ---
 
@@ -73,4 +74,4 @@ These come from clicking through the live admin (News / Products sections).
 1. ~~**A4** (repeater fields) + **A2** (discoverable section creation)~~ ✅ Done.
 2. ~~**B1** (Postgres migrations)~~ ✅ Done.
 3. ~~**A1 / A3**~~ ✅ Done.
-4. **A5 / B2 / B3** — polish.
+4. ~~**A5**~~ ✅ Done. **B2 / B3** — remaining polish.

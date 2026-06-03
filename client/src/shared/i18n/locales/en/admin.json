@@ -71,6 +71,7 @@
       "typography": "Text / heading",
       "field": "Form field",
       "container": "Container",
+      "containerRow": "Row (flex)",
       "slider": "Slider"
     },
     "props": {
@@ -89,7 +90,9 @@
       "gap": "Gap",
       "justify": "Justify",
       "align": "Align",
-      "width": "Width"
+      "width": "Width",
+      "rowHint": "Children are arranged side-by-side (flex row)",
+      "colHint": "Switch direction to \"row\" to place children side-by-side"
     },
     "style": {
       "background": "Background",
