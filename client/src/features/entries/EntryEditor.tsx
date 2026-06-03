@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { AxiosError } from 'axios';
 import { Typography } from '@shared/ui/Typography';
@@ -135,6 +135,13 @@ export function EntryEditor({ section, entry }: Props) {
             )}
           </div>
         </header>
+
+        <div className="entry-editor__layout-hint">
+          <span>{t('admin:entries.layoutHint')}</span>
+          <Link to={`/settings/sections/${section.id}`}>
+            {t('admin:entries.editLayout')}
+          </Link>
+        </div>
 
         <div className="entry-editor__canvas">
           {layout.root.length === 0 ? (

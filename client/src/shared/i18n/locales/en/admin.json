@@ -24,7 +24,9 @@
     "notFound": "Entry not found",
     "emptyLayout": "This section has no layout yet. A superadmin can design it in Settings → Sections.",
     "dragToReorder": "Drag to reorder",
-    "reorderError": "Failed to save new order. The list has been refreshed."
+    "reorderError": "Failed to save new order. The list has been refreshed.",
+    "layoutHint": "Layout structure is managed in Settings → Sections.",
+    "editLayout": "Edit layout →"
   },
   "sections": {
     "title": "Sections",

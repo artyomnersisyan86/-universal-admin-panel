@@ -23,13 +23,11 @@ These come from clicking through the live admin (News / Products sections).
 
 - `+` button in the sidebar SECTIONS group opens `CreateSectionDialog` as an inline modal overlay (portal to `document.body`). Superadmin-only. After save → redirect to section builder. Empty-state hint shown when 0 sections.
 
-### A3 🟠 Entry editor cannot rearrange elements
+### ~~A3~~ ✅ Entry editor cannot rearrange elements — **DONE**
 
-- **Where:** [client/src/features/entries/EntryEditor.tsx](../client/src/features/entries/EntryEditor.tsx) renders the section's layout as a read-only structure and binds inputs to entry `data`. Element reordering exists only in the section-builder (`/settings/sections/:id`).
-- **Decision needed:**
-  - (a) Keep layout strictly section-level and make that obvious in the UI (label/help text "layout is edited in Settings → Sections"), **or**
-  - (b) allow per-entry layout overrides with the same DnD canvas as the builder (bigger change: entries would need to store their own `layout`).
-- This is the root of why "rows/elements behave differently than Settings → Sections".
+- **Decision taken:** option (a) — layout stays strictly section-level.
+- **Rationale:** spec Decision #A mandates `layout` is stored per-section. Per-entry overrides would give each `news` entry a different schema, breaking the auto-generated `/api/news` list contract.
+- **Change:** `EntryEditor` now shows a passive info banner — _"Layout structure is managed in Settings → Sections"_ — with a direct link to `/settings/sections/:id`. Translated in hy/ru/en.
 
 ### ~~A4~~ ✅ No nested / repeatable list fields — **DONE**
 
@@ -74,5 +72,5 @@ These come from clicking through the live admin (News / Products sections).
 
 1. ~~**A4** (repeater fields) + **A2** (discoverable section creation)~~ ✅ Done.
 2. ~~**B1** (Postgres migrations)~~ ✅ Done.
-3. **A1 / A3** (table DnD + entry-editor reorder decision) — depends on the A3 design choice.
+3. ~~**A1 / A3**~~ ✅ Done.
 4. **A5 / B2 / B3** — polish.
