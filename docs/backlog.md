@@ -50,10 +50,13 @@ These come from clicking through the live admin (News / Products sections).
 - `typeorm.config.ts` Postgres branch: `synchronize: false`, `migrationsRun: true`, `migrations: [path.join(__dirname, '..', 'migrations', '*.{ts,js}')]` — migrations auto-run on NestJS startup (no Dockerfile changes needed).
 - SQLite dev path unchanged (`synchronize: !isProd`).
 
-### B2 🟡 `GET /api/:slug/:id` does not return `layout`
+### ~~B2~~ ✅ `GET /api/:slug/:id` does not return `layout` — **DONE**
 
-- Spec §7 / acceptance #6 expects the detail response to include `layout` + `data`. [entries.service.ts](../server/src/modules/entries/entries.service.ts) `serialize()` returns `sectionSlug`, `data`, `status`, timestamps — **no layout**. Clients fetch layout separately via `/api/sections/:id`.
-- **Action:** either embed the section layout in the entry detail response (optionally behind `?include=layout`) or update the spec to document the two-call pattern.
+- `SerializedEntry` extended with optional `layout?: unknown`.
+- `EntriesService.serialize()` accepts 4th param `includeLayout?: boolean`; spreads `section.layout` into the result when `true`.
+- `SectionEntriesController.getOne()` passes `true` — detail responses now always include the section block tree.
+- List responses (`GET /api/:slug`) unchanged — no layout per item.
+- `docs/api.md` updated: table and response shapes document the distinction.
 
 ### B3 🟡 Upload limit default is 10 MB, spec says 5
 
@@ -74,4 +77,4 @@ These come from clicking through the live admin (News / Products sections).
 1. ~~**A4** (repeater fields) + **A2** (discoverable section creation)~~ ✅ Done.
 2. ~~**B1** (Postgres migrations)~~ ✅ Done.
 3. ~~**A1 / A3**~~ ✅ Done.
-4. ~~**A5**~~ ✅ Done. **B2 / B3** — remaining polish.
+4. ~~**A5**~~ ✅ Done. ~~**B2**~~ ✅ Done. **B3** — remaining polish.

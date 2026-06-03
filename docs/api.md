@@ -84,7 +84,7 @@ Every section is served at `/api/:sectionSlug`. This controller is registered **
 | Method | Path                          | Auth                                  | Returns                                  |
 |--------|-------------------------------|---------------------------------------|------------------------------------------|
 | GET    | `/api/:slug`                  | public if `isPublic`, else JWT        | List of entries                          |
-| GET    | `/api/:slug/:id`              | public if `isPublic`, else JWT        | One entry                                |
+| GET    | `/api/:slug/:id`              | public if `isPublic`, else JWT        | One entry **+ section layout**           |
 | POST   | `/api/:slug`                  | JWT + `admin`                         | Created entry (`status: draft`)          |
 | PATCH  | `/api/:slug/:id`              | JWT + `admin`                         | Updated entry                            |
 | POST   | `/api/:slug/:id/publish`      | JWT + `admin`                         | Entry with `status: published`           |
@@ -100,7 +100,7 @@ Every section is served at `/api/:sectionSlug`. This controller is registered **
 
 `POST` / `PATCH` body: `{ "data": { ... }, "status"?: "draft" | "published" }`. `data` is free-form `jsonb` keyed by the section's field keys; multilingual fields are nested `{ hy, ru, en }` objects.
 
-Serialized entry shape:
+Serialized entry shape (list):
 
 ```jsonc
 {
@@ -110,6 +110,22 @@ Serialized entry shape:
   "status": "published",
   "data": { /* field values, or collapsed locale when ?lang= */ },
   "publishedAt": "2026-05-30T…Z" /* or null */,
+  "createdAt": "…",
+  "updatedAt": "…"
+}
+```
+
+Detail response (`GET /api/:slug/:id`) additionally includes the section's block tree:
+
+```jsonc
+{
+  "id": "uuid",
+  "sectionId": "uuid",
+  "sectionSlug": "news",
+  "status": "published",
+  "layout": { /* section block tree — same JSON stored in sections.layout */ },
+  "data": { /* field values */ },
+  "publishedAt": "…",
   "createdAt": "…",
   "updatedAt": "…"
 }

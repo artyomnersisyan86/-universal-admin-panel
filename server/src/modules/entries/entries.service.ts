@@ -18,6 +18,7 @@ export interface SerializedEntry {
   sectionId: string;
   sectionSlug: string;
   status: EntryStatus;
+  layout?: unknown;
   data: unknown;
   publishedAt: Date | null;
   createdAt: Date;
@@ -110,13 +111,14 @@ export class EntriesService {
     );
   }
 
-  serialize(entry: EntryEntity, section: SectionEntity, lang?: Locale): SerializedEntry {
+  serialize(entry: EntryEntity, section: SectionEntity, lang?: Locale, includeLayout?: boolean): SerializedEntry {
     const data = lang ? localize(entry.data, lang) : entry.data;
     return {
       id: entry.id,
       sectionId: entry.sectionId,
       sectionSlug: section.slug,
       status: entry.status,
+      ...(includeLayout ? { layout: section.layout } : {}),
       data,
       publishedAt: entry.publishedAt ?? null,
       createdAt: entry.createdAt,

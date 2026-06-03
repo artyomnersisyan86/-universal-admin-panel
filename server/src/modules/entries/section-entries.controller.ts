@@ -95,7 +95,7 @@ export class SectionEntriesController {
     if (!this.isAdmin(user) && entry.status !== EntryStatus.PUBLISHED) {
       throw new NotFoundException({ errors: { id: 'notFound' } });
     }
-    return this.entries.serialize(entry, section, lang);
+    return this.entries.serialize(entry, section, lang, true);
   }
 
   // ---------- admin mutations ----------
