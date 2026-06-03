@@ -58,10 +58,9 @@ These come from clicking through the live admin (News / Products sections).
 - List responses (`GET /api/:slug`) unchanged — no layout per item.
 - `docs/api.md` updated: table and response shapes document the distinction.
 
-### B3 🟡 Upload limit default is 10 MB, spec says 5
+### ~~B3~~ ✅ Upload limit default is 10 MB, spec says 5 — **DONE**
 
-- Decision E fixes `MAX_UPLOAD_MB=5`; code default and `.env.example` / both compose files use `10` ([uploads.controller.ts](../server/src/modules/uploads/uploads.controller.ts)).
-- **Action:** one-line change to align the default (or amend the spec to 10).
+- Default changed to `5` in `uploads.controller.ts` (`?? 5`), both compose files (`:-5`), and `README.md`.
 
 ---
 
@@ -77,4 +76,4 @@ These come from clicking through the live admin (News / Products sections).
 1. ~~**A4** (repeater fields) + **A2** (discoverable section creation)~~ ✅ Done.
 2. ~~**B1** (Postgres migrations)~~ ✅ Done.
 3. ~~**A1 / A3**~~ ✅ Done.
-4. ~~**A5**~~ ✅ Done. ~~**B2**~~ ✅ Done. **B3** — remaining polish.
+4. ~~**A5**~~ ✅ Done. ~~**B2**~~ ✅ Done. ~~**B3**~~ ✅ Done.

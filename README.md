@@ -103,7 +103,7 @@ docker compose -f docker-compose.prod.yml exec server npm run migration:run
 | `SEED_SUPERADMIN_EMAIL`      | admin@example.com                    | First superadmin                       |
 | `SEED_SUPERADMIN_PASSWORD`   | admin                                | First superadmin password              |
 | `UPLOAD_DIR`                 | /app/uploads                         | Server-side upload directory           |
-| `MAX_UPLOAD_MB`              | 10                                   | Max upload size                        |
+| `MAX_UPLOAD_MB`              | 5                                    | Max upload size                        |
 | `VITE_API_URL`               | /api                                 | Client → API base URL                  |
 | `VITE_DEFAULT_LANG`          | hy                                   | Default UI language                    |
 | `NGINX_HTTP_PORT`            | 80                                   | Exposed HTTP port                      |

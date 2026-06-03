@@ -30,7 +30,7 @@ services:
       SEED_SUPERADMIN_EMAIL: ${SEED_SUPERADMIN_EMAIL:-admin@example.com}
       SEED_SUPERADMIN_PASSWORD: ${SEED_SUPERADMIN_PASSWORD:-admin}
       UPLOAD_DIR: /app/uploads
-      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-10}
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-5}
     volumes:
       - ./server:/app
       - server_node_modules:/app/node_modules

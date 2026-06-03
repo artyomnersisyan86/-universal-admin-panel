@@ -38,7 +38,7 @@ logs/
 docker/volumes/
 
 # Uploads (runtime)
-uploads/
+server/uploads/
 
 # SQLite (local dev DB)
 *.sqlite

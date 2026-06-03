@@ -38,7 +38,7 @@ export class UploadsController {
           cb(null, name);
         },
       }),
-      limits: { fileSize: Number(process.env.MAX_UPLOAD_MB ?? 10) * 1024 * 1024 },
+      limits: { fileSize: Number(process.env.MAX_UPLOAD_MB ?? 5) * 1024 * 1024 },
     }),
   )
   upload(@UploadedFile() file: Express.Multer.File) {
