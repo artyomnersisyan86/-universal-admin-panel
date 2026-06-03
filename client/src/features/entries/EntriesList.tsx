@@ -1,11 +1,28 @@
-import { useMemo, type ReactNode } from 'react';
+import { useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import {
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragOverlay,
+  closestCenter,
+  type DragStartEvent,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+  arrayMove,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { Typography } from '@shared/ui/Typography';
 import { Button } from '@shared/ui/Button';
 import type { FieldDef, Multilingual, Section, SupportedLanguage } from '@shared/types';
 import type { Entry } from '@shared/api/entries';
-import { useDeleteEntry, useEntriesList, usePublishEntry } from './useEntries';
+import { useDeleteEntry, useEntriesList, usePublishEntry, useReorderEntries } from './useEntries';
 import { collectFieldDefs } from './entryData';
 import './EntriesList.css';
 
@@ -15,11 +32,98 @@ interface Props {
   section: Section;
 }
 
-/**
- * Per-section records table. Columns are derived from the layout's field
- * blocks; each row links into the {@link EntryEditor} (the same page-builder,
- * filled with the entry's data). Admins create/publish/delete here.
- */
+interface RowProps {
+  entry: Entry;
+  columns: FieldDef[];
+  lang: SupportedLanguage;
+  onOpen: (id: string) => void;
+  onPublish: (id: string) => void;
+  onDelete: (entry: Entry) => void;
+  isPublishing: boolean;
+  isDeleting: boolean;
+  isDragOverlay?: boolean;
+}
+
+function SortableRow({
+  entry,
+  columns,
+  lang,
+  onOpen,
+  onPublish,
+  onDelete,
+  isPublishing,
+  isDeleting,
+  isDragOverlay = false,
+}: RowProps) {
+  const { t } = useTranslation(['admin', 'common']);
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: entry.id,
+  });
+
+  const style = isDragOverlay
+    ? undefined
+    : {
+        transform: CSS.Transform.toString(transform),
+        transition,
+      };
+
+  return (
+    <tr
+      ref={isDragOverlay ? undefined : setNodeRef}
+      style={style}
+      className={[
+        'entries-list__row',
+        isDragging ? 'entries-list__row--dragging' : '',
+        isDragOverlay ? 'entries-list__row--overlay' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      onClick={() => onOpen(entry.id)}
+    >
+      <td className="entries-list__drag-cell" onClick={(e) => e.stopPropagation()}>
+        <span
+          className="entries-list__drag-handle"
+          {...(isDragOverlay ? {} : { ...attributes, ...listeners })}
+          title={t('admin:entries.dragToReorder')}
+        >
+          ⠿
+        </span>
+      </td>
+      {columns.map((c) => (
+        <td key={c.id}>{renderCell(c, entry.data[c.name], lang)}</td>
+      ))}
+      <td>
+        <span className={`entries-list__status entries-list__status--${entry.status}`}>
+          {t(`admin:entries.status.${entry.status}`)}
+        </span>
+      </td>
+      <td className="entries-list__actions" onClick={(ev) => ev.stopPropagation()}>
+        <Button size="small" variant="text" onClick={() => onOpen(entry.id)}>
+          {t('common:app.edit')}
+        </Button>
+        {entry.status === 'draft' && (
+          <Button
+            size="small"
+            variant="text"
+            onClick={() => onPublish(entry.id)}
+            disabled={isPublishing}
+          >
+            {t('admin:entries.publish')}
+          </Button>
+        )}
+        <Button
+          size="small"
+          variant="text"
+          onClick={() => onDelete(entry)}
+          disabled={isDeleting}
+        >
+          {t('common:app.delete')}
+        </Button>
+      </td>
+    </tr>
+  );
+}
+
 export function EntriesList({ section }: Props) {
   const { t, i18n } = useTranslation(['admin', 'common']);
   const navigate = useNavigate();
@@ -33,6 +137,51 @@ export function EntriesList({ section }: Props) {
   const list = useEntriesList(section.slug);
   const publish = usePublishEntry(section.slug);
   const del = useDeleteEntry(section.slug);
+  const reorder = useReorderEntries(section.slug);
+
+  const [orderedIds, setOrderedIds] = useState<string[]>([]);
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (list.data) {
+      setOrderedIds(list.data.map((e) => e.id));
+    }
+  }, [list.data]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+  );
+
+  const orderedEntries = useMemo(() => {
+    if (!list.data) return [];
+    const map = new Map(list.data.map((e) => [e.id, e]));
+    return orderedIds.map((id) => map.get(id)).filter((e): e is Entry => Boolean(e));
+  }, [list.data, orderedIds]);
+
+  const activeEntry = useMemo(
+    () => (activeId ? orderedEntries.find((e) => e.id === activeId) : null),
+    [activeId, orderedEntries],
+  );
+
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    setActiveId(String(event.active.id));
+  }, []);
+
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      setActiveId(null);
+      const { active, over } = event;
+      if (!over || active.id === over.id) return;
+      setOrderedIds((prev) => {
+        const oldIndex = prev.indexOf(String(active.id));
+        const newIndex = prev.indexOf(String(over.id));
+        const next = arrayMove(prev, oldIndex, newIndex);
+        reorder.mutate(next);
+        return next;
+      });
+    },
+    [reorder],
+  );
 
   function openEntry(id: string) {
     navigate(`/c/${section.slug}/${id}`);
@@ -72,58 +221,63 @@ export function EntriesList({ section }: Props) {
         </div>
       )}
 
-      {list.data && list.data.length > 0 && (
-        <table className="entries-list__table">
-          <thead>
-            <tr>
-              {columns.map((c) => (
-                <th key={c.id}>{c.label}</th>
-              ))}
-              <th>{t('admin:entries.statusColumn')}</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {list.data.map((entry) => (
-              <tr
-                key={entry.id}
-                className="entries-list__row"
-                onClick={() => openEntry(entry.id)}
-              >
+      {orderedEntries.length > 0 && (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+        >
+          <table className="entries-list__table">
+            <thead>
+              <tr>
+                <th className="entries-list__drag-header" />
                 {columns.map((c) => (
-                  <td key={c.id}>{renderCell(c, entry.data[c.name], lang)}</td>
+                  <th key={c.id}>{c.label}</th>
                 ))}
-                <td>
-                  <span
-                    className={`entries-list__status entries-list__status--${entry.status}`}
-                  >
-                    {t(`admin:entries.status.${entry.status}`)}
-                  </span>
-                </td>
-                <td
-                  className="entries-list__actions"
-                  onClick={(ev) => ev.stopPropagation()}
-                >
-                  <Button size="small" variant="text" onClick={() => openEntry(entry.id)}>
-                    {t('common:app.edit')}
-                  </Button>
-                  {entry.status === 'draft' && (
-                    <Button
-                      size="small"
-                      variant="text"
-                      onClick={() => publish.mutate(entry.id)}
-                    >
-                      {t('admin:entries.publish')}
-                    </Button>
-                  )}
-                  <Button size="small" variant="text" onClick={() => handleDelete(entry)}>
-                    {t('common:app.delete')}
-                  </Button>
-                </td>
+                <th>{t('admin:entries.statusColumn')}</th>
+                <th />
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <SortableContext items={orderedIds} strategy={verticalListSortingStrategy}>
+              <tbody>
+                {orderedEntries.map((entry) => (
+                  <SortableRow
+                    key={entry.id}
+                    entry={entry}
+                    columns={columns}
+                    lang={lang}
+                    onOpen={openEntry}
+                    onPublish={(id) => publish.mutate(id)}
+                    onDelete={handleDelete}
+                    isPublishing={publish.isPending}
+                    isDeleting={del.isPending}
+                  />
+                ))}
+              </tbody>
+            </SortableContext>
+          </table>
+
+          <DragOverlay>
+            {activeEntry && (
+              <table className="entries-list__table entries-list__table--overlay">
+                <tbody>
+                  <SortableRow
+                    entry={activeEntry}
+                    columns={columns}
+                    lang={lang}
+                    onOpen={() => {}}
+                    onPublish={() => {}}
+                    onDelete={() => {}}
+                    isPublishing={false}
+                    isDeleting={false}
+                    isDragOverlay
+                  />
+                </tbody>
+              </table>
+            )}
+          </DragOverlay>
+        </DndContext>
       )}
     </div>
   );
@@ -137,7 +291,6 @@ function truncate(value: string, max = 80): string {
   return value.length > max ? `${value.slice(0, max)}…` : value;
 }
 
-/** Render a single data cell according to its field type. */
 function renderCell(field: FieldDef, raw: unknown, lang: SupportedLanguage): ReactNode {
   if (field.type === 'checkbox' || field.type === 'switch') {
     return raw ? '✓' : '—';

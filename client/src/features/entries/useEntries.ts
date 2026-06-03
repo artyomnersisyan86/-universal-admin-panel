@@ -65,3 +65,13 @@ export function useDeleteEntry(slug: string) {
     },
   });
 }
+
+export function useReorderEntries(slug: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (ids: string[]) => entriesApi.reorder(slug, ids),
+    onError: () => {
+      void qc.invalidateQueries({ queryKey: entriesKey(slug) });
+    },
+  });
+}

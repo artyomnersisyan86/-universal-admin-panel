@@ -40,6 +40,9 @@ export class EntryEntity {
   @Column({ type: 'varchar', name: 'created_by', nullable: true })
   createdBy?: string | null;
 
+  @Column({ type: 'integer', name: 'display_order', default: 0 })
+  displayOrder!: number;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 

@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { EntryEntity } from './entry.entity';
 import { EntryStatus } from './entry-status.enum';
 import { CreateEntryDto } from './dto/create-entry.dto';
@@ -35,7 +35,7 @@ export class EntriesService {
     const where: Partial<Pick<EntryEntity, 'sectionId' | 'status'>> = {};
     if (filter.sectionId) where.sectionId = filter.sectionId;
     if (filter.status) where.status = filter.status;
-    return this.repo.find({ where, order: { createdAt: 'DESC' } });
+    return this.repo.find({ where, order: { displayOrder: 'ASC', createdAt: 'DESC' } });
   }
 
   async findOne(id: string): Promise<EntryEntity> {
@@ -93,6 +93,21 @@ export class EntriesService {
 
   async removeBySection(sectionId: string): Promise<void> {
     await this.repo.delete({ sectionId });
+  }
+
+  async reorder(sectionId: string, orderedIds: string[]): Promise<void> {
+    const existing = await this.repo.find({
+      where: { sectionId, id: In(orderedIds) },
+      select: ['id'],
+    });
+    if (existing.length !== orderedIds.length) {
+      throw new BadRequestException({ errors: { ids: 'someIdsNotFound' } });
+    }
+    await Promise.all(
+      orderedIds.map((id, index) =>
+        this.repo.update({ id, sectionId }, { displayOrder: index }),
+      ),
+    );
   }
 
   serialize(entry: EntryEntity, section: SectionEntity, lang?: Locale): SerializedEntry {

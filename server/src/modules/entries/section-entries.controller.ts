@@ -29,6 +29,7 @@ import { EntriesService, SerializedEntry } from './entries.service';
 import { EntryStatus } from './entry-status.enum';
 import { CreateEntryDto } from './dto/create-entry.dto';
 import { UpdateEntryDto } from './dto/update-entry.dto';
+import { ReorderEntriesDto } from './dto/reorder-entries.dto';
 import { isLocale, type Locale } from './localize';
 
 /**
@@ -136,6 +137,18 @@ export class SectionEntriesController {
     const section = await this.resolveSectionForWrite(slug);
     const entry = await this.entries.publish(section.id, entryId);
     return this.entries.serialize(entry, section);
+  }
+
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(UserRole.ADMIN)
+  @Patch('reorder')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async reorder(
+    @Param('sectionSlug') slug: string,
+    @Body() dto: ReorderEntriesDto,
+  ): Promise<void> {
+    const section = await this.resolveSectionForWrite(slug);
+    await this.entries.reorder(section.id, dto.ids);
   }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)

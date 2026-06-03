@@ -13,6 +13,7 @@ export interface Entry {
   sectionSlug: string;
   status: EntryStatus;
   data: Record<string, unknown>;
+  displayOrder: number;
   publishedAt: string | null;
   createdAt: string;
   updatedAt: string;
@@ -52,4 +53,7 @@ export const entriesApi = {
 
   remove: (slug: string, id: string) =>
     apiClient.delete<void>(`/${slug}/${id}`).then((r) => r.data),
+
+  reorder: (slug: string, ids: string[]) =>
+    apiClient.patch<void>(`/${slug}/reorder`, { ids }).then((r) => r.data),
 };
