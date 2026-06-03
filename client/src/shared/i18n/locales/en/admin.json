@@ -22,7 +22,9 @@
     "confirmDelete": "Delete this entry?",
     "backToList": "Back to list",
     "notFound": "Entry not found",
-    "emptyLayout": "This section has no layout yet. A superadmin can design it in Settings → Sections."
+    "emptyLayout": "This section has no layout yet. A superadmin can design it in Settings → Sections.",
+    "dragToReorder": "Drag to reorder",
+    "reorderError": "Failed to save new order. The list has been refreshed."
   },
   "sections": {
     "title": "Sections",
@@ -38,6 +40,7 @@
     "public": "Public read access",
     "publicHint": "GET requests don't require JWT",
     "empty": "No sections yet. Create your first one — it'll show up in the sidebar.",
+    "noSectionsHint": "No sections yet — click + to create one",
     "confirmDelete": "Delete section \"{{name}}\" and all its entries?",
     "backToList": "Back to sections",
     "notFound": "Section not found",

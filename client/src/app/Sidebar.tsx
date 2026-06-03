@@ -1,6 +1,8 @@
+import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useSectionsList } from '@features/sections';
+import { useSectionsList, CreateSectionDialog } from '@features/sections';
 import { useAuth } from '@features/auth/useAuth';
 import type { SupportedLanguage } from '@shared/types';
 import './Sidebar.css';
@@ -11,6 +13,7 @@ export function Sidebar() {
   const sections = useSectionsList();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [creating, setCreating] = useState(false);
 
   const ordered = [...(sections.data ?? [])].sort(
     (a, b) => a.displayOrder - b.displayOrder,
@@ -31,18 +34,21 @@ export function Sidebar() {
 
         {showGroup && (
           <div className="sidebar__group">
-            {isSuperadmin && (
-              <div className="sidebar__group-header">
-                <span className="sidebar__group-label">{t('nav.sections')}</span>
+            <div className="sidebar__group-header">
+              <span className="sidebar__group-label">{t('nav.sections')}</span>
+              {isSuperadmin && (
                 <button
                   className="sidebar__add-btn"
-                  onClick={() => navigate('/settings/sections?create=1')}
+                  onClick={() => setCreating(true)}
                   title={t('sections.create')}
                   aria-label={t('sections.create')}
                 >
                   +
                 </button>
-              </div>
+              )}
+            </div>
+            {isSuperadmin && ordered.length === 0 && (
+              <span className="sidebar__empty-hint">{t('sections.noSectionsHint')}</span>
             )}
             {ordered.map((s) => (
               <NavLink key={s.id} to={`/c/${s.slug}`} className={linkClass}>
@@ -57,6 +63,28 @@ export function Sidebar() {
           {t('nav.settings')}
         </NavLink>
       </nav>
+
+      {creating &&
+        createPortal(
+          <div
+            className="sidebar-modal-backdrop"
+            onClick={() => setCreating(false)}
+          >
+            <div
+              className="sidebar-modal-content"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <CreateSectionDialog
+                onClose={() => setCreating(false)}
+                onCreated={(id) => {
+                  setCreating(false);
+                  navigate(`/settings/sections/${id}`);
+                }}
+              />
+            </div>
+          </div>,
+          document.body,
+        )}
     </aside>
   );
 }
