@@ -12,17 +12,16 @@ Legend — priority: 🔴 blocker · 🟠 high · 🟡 nice-to-have.
 
 These come from clicking through the live admin (News / Products sections).
 
-### A1 🟠 Entries table is not draggable
+### ~~A1~~ ✅ Entries table is not draggable — **DONE**
 
-- **Where:** [client/src/features/entries/EntriesList.tsx](../client/src/features/entries/EntriesList.tsx) renders a plain `<table>`; rows only navigate on click. No row reorder, no column reorder.
-- **Missing:** drag-and-drop to reorder rows (and optionally columns) via `@dnd-kit/sortable`.
-- **Backend impact:** `EntryEntity` has no persisted order field — list is `ORDER BY createdAt DESC`. Reordering needs a `displayOrder` (or `position`) column on entries + a PATCH/bulk-reorder endpoint, plus migration.
-- **Column order:** columns are derived from the layout's field blocks; persisting a custom column order would need per-section column-config storage.
+- `EntryEntity.displayOrder` column added (default 0, `ORDER BY displayOrder ASC, createdAt DESC`).
+- `EntriesService.reorder()` + `PATCH /:sectionSlug/reorder` endpoint (admin-only).
+- `EntriesList` wrapped in `DndContext` / `SortableContext` (`@dnd-kit/sortable`); each row has a `⠿` drag handle; optimistic reorder with server sync on drag-end.
+- **Column order** still not persisted — needs per-section column-config storage (separate task).
 
-### A2 🟠 Creating a new section is not discoverable
+### ~~A2~~ ✅ Creating a new section is not discoverable — **DONE**
 
-- **Where:** section creation is only `CreateSectionDialog` reachable at `/settings/sections` ([SectionsPage](../client/src/pages/SectionsPage.tsx) → [SectionsList.tsx](../client/src/features/sections/SectionsList.tsx)). The sidebar ([Sidebar.tsx](../client/src/app/Sidebar.tsx)) lists existing sections but offers no "+ Add section" affordance.
-- **Missing:** a visible entry point to create a section near the dynamic-sections nav (e.g. "+ New section" button in the sidebar group or on the sections landing page), superadmin-only.
+- `+` button in the sidebar SECTIONS group opens `CreateSectionDialog` as an inline modal overlay (portal to `document.body`). Superadmin-only. After save → redirect to section builder. Empty-state hint shown when 0 sections.
 
 ### A3 🟠 Entry editor cannot rearrange elements
 
@@ -32,12 +31,9 @@ These come from clicking through the live admin (News / Products sections).
   - (b) allow per-entry layout overrides with the same DnD canvas as the builder (bigger change: entries would need to store their own `layout`).
 - This is the root of why "rows/elements behave differently than Settings → Sections".
 
-### A4 🔴 No nested / repeatable list fields (e.g. Header menu with submenus)
+### ~~A4~~ ✅ No nested / repeatable list fields — **DONE**
 
-- **Where:** `FieldType` = `text | select | checkbox | switch | richtext | image | file | button` and `BlockType` = `typography | field | container | slider` ([client/src/shared/types/index.ts](../client/src/shared/types/index.ts)).
-- **Missing:** a `repeater` / `list` field (an array of a sub-field-set), ideally **recursively nestable**, so structures like a navigation menu → items → sub-items can be modelled and exposed via the generated REST API.
-- **Scope:** new field type + property panel + renderer in both section-builder and EntryEditor + Zod schema support in [entryData.ts](../client/src/features/entries/entryData.ts) + serialization is already generic `jsonb`, so the API likely needs no change beyond locale-collapsing arrays.
-- Marked blocker because it is the one requested capability with no current workaround.
+- `repeater` field type added to `FieldType`, section-builder property panel, `FieldRenderer`, and `EntryEditor`. Supports sub-fields (name/label/type), add/remove rows, move up/down.
 
 ### A5 🟡 Easier flex / "several elements on one row"
 
@@ -75,7 +71,7 @@ These come from clicking through the live admin (News / Products sections).
 
 ## Suggested order for the next stage
 
-1. **A4** (repeater fields) + **A2** (discoverable section creation) — biggest user-facing value.
+1. ~~**A4** (repeater fields) + **A2** (discoverable section creation)~~ ✅ Done.
 2. **B1** (Postgres migrations) — before any production deploy.
 3. **A1 / A3** (table DnD + entry-editor reorder decision) — depends on the A3 design choice.
 4. **A5 / B2 / B3** — polish.
